@@ -16,6 +16,14 @@
 
 _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 
+## 🎨 设计 design/
+
+> UI / UX 设计规范、页面清单、设计 token。
+
+| 文档 | 摘要 | 状态 | 日期 |
+|---|---|---|---|
+| [page-spec.md](./design/page-spec.md) | 10 个页面功能清单 + 设计调性（液态玻璃/近黑/高对比/大点击）+ 行车态差异 + mock 数据字段 + 首批 5 页建议 | Draft | 2026-05-25 |
+
 ## 📋 架构决策记录 decisions/
 
 > ADR 按 NNNN 递增编号。状态：Proposed → Accepted → Superseded。
