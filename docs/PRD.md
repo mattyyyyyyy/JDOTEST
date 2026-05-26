@@ -1,10 +1,16 @@
 # 车机端电商平台 PRD
 
-> 版本：v0.3 · 日期：2026-05-25 · 状态：Draft
-> 取代：v0.2（v0.1/v0.2 保留在 git 历史中）
+> 版本：v0.4 · 日期：2026-05-26 · 状态：Draft
+> 取代：v0.3（v0.1 ~ v0.3 保留在 git 历史中）
 > 沟通语言：中文 · 协作铁律见 `CLAUDE.md`
 >
-> v0.3 变更：补充 **仓库与目录规划**、**后端接入方案**、**起手 Coding 计划**，让本文件具备"读完即可开干"的可执行性
+> v0.4 变更：本 PRD 本体内容稳定，**新增 4 份配套文档**让"读完即可开干"升级为"读完即可派活 + 派设计"：
+> - [`docs/feature-spec.md`](./feature-spec.md)：把 39 条 User Story 拆解到「页面 × 区块 × 接口 × 状态机」颗粒度，工程派活源
+> - [`docs/design/design-system.md`](./design/design-system.md)：完整设计 tokens（色 / 字 / 距 / 圆 / 阴 / 触 / 动）+ 组件契约 + Tailwind 配置约定
+> - [`docs/research/competitor-analysis.md`](./research/competitor-analysis.md)：7 家车机商城 + AAOS / NHTSA / 鸿蒙公开 HMI 规范调研，硬数字来源
+> - [`mockups/`](../mockups/)：11 屏可点击高保真原型（深色 + 液态玻璃 + 行车态降级），打开 [mockups/index.html](../mockups/index.html) 即可演示
+>
+> v0.3 变更：补充 **仓库与目录规划**、**后端接入方案**、**起手 Coding 计划**
 
 ---
 
