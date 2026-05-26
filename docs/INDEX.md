@@ -2,6 +2,49 @@
 
 > 本仓库所有结论性文档的目录。每次新增 / 修改 / 废弃文档都必须同步更新这里。
 > 协作铁律见根目录 [`CLAUDE.md`](../CLAUDE.md)。
+>
+> 🤝 **多 agent 协作仪表盘**：以下 Active Workstreams 与 Ownership Zones 两张表是
+> **append-only 协作区**（详见 [CLAUDE.md §多 agent 协作公约](../CLAUDE.md)）。
+> 任何 agent 开工前必须在 Active Workstreams append 一行登记自己的工作。
+
+---
+
+## 🚦 Active Workstreams（实时态 · append-only）
+
+> 任何 agent **开工前**必须在此 append 一行登记。完工后把行移到 Recent Activity。
+> 格式：`agent-id | 工作范围 | 起始 | 涉及文件（glob）`
+
+| Agent | 工作范围 | 起始 | 涉及文件 | 状态 |
+|---|---|---|---|---|
+| _暂无登记_ | | | | |
+
+## 🗺 Ownership Zones（目录分工建议）
+
+> 不强制锁定，但改文件前先看是否在别人 zone 里。
+> 别人 zone → coordinate；自己 zone → 直接干；无人 zone → 直接干。
+
+| Zone (路径) | 默认所有者 | 说明 |
+|---|---|---|
+| `docs/decisions/ADR-*.md` | 提案 agent | ADR 一旦 Accepted 不再随便改，要改用 Superseded 流程 |
+| `docs/design/design-system.md` | UI agent | 设计 token 单一真相 |
+| `docs/design/page-spec.md` | UI agent | 视觉布局权威源 |
+| `docs/design/interaction-patterns.md` | UX agent | 交互模式 / 状态矩阵 / 决策树 |
+| `docs/feature-spec.md` | 工程 agent | 路由 / 接口 / 状态机权威源，**改前必须在 Active Workstreams 登记** |
+| `docs/PRD.md` | 产品 agent | 升版本前必须在 Active Workstreams 登记 |
+| `docs/research/` | 调研 agent | 调研先来这里检索，避免重复 |
+| `mockups/*.html` | UI agent | 单文件改动可并行；样式文件 `styles/*.css` 改前登记 |
+| `mockups/styles/tokens.css` | UI agent | **冲突高发**，改前登记必做 |
+| **`docs/INDEX.md`** | **全员 append-only** | 任何 agent 都可在 Workstreams / Activity 加行，不可改/删别人的 |
+| **`CLAUDE.md`** | **全员协商** | 改公约前必须在 Active Workstreams 登记并征询其它在线 agent |
+| `apps/h5/**` `services/api/**` `packages/**` | 实施 agent | 待落地，按 ADR-0006 monorepo 结构 |
+
+## 📋 Recent Activity（最近完成 · 倒序）
+
+> Workstreams 完工后移到这里。最近 10 条保留，更早按月归档。
+
+| 日期 | Agent | 完成项 | 关键 commit |
+|---|---|---|---|
+| _待登记_ | | | |
 
 ---
 

@@ -27,6 +27,62 @@
 
 ---
 
+## 🚦 派活进度 Implementation Status
+
+> 全局派活看板。**认领工作前先在 [`docs/INDEX.md`](./INDEX.md) §Active Workstreams append 一行**，再在此把对应项的状态徽改成你的 agent-id。
+> 状态字段固定 4 个值，不允许自定义：`🟡 unclaimed` / `🔵 in-progress` / `🟢 done` / `🔴 blocked`。
+> 改这张表本身遵循 append-only 协作精神：状态变更直接覆写自己之前的行（不要复制多行），不要动别人的认领。
+
+### 页面 Pages
+
+| ID | 名称 | 路由 | 状态 | Owner | 关联 mockup | 备注 |
+|---|---|---|---|---|---|---|
+| P-01 | 首页 | `/` | 🟡 unclaimed | — | `home.html` | 2560×1600 版本已就绪 |
+| P-02 | 分类页 | `/c/:cid` | 🟡 unclaimed | — | `category.html` | — |
+| P-03 | 搜索页 | `/search` | 🟡 unclaimed | — | `search.html` | — |
+| P-04 | 商品详情 | `/p/:pid` | 🟡 unclaimed | — | `product-detail.html` | — |
+| P-05 | 购物车 | `/cart` | 🟡 unclaimed | — | `cart.html` | — |
+| P-06 | 结算页 | `/checkout` | 🟡 unclaimed | — | `checkout.html` | — |
+| P-07 | 支付页 | `/pay/:orderId` | 🟡 unclaimed | — | `payment.html` | — |
+| P-08 | 我的订单 | `/orders` | 🟡 unclaimed | — | — | mockup 待补 |
+| P-09 | 订单详情 | `/orders/:oid` | 🟡 unclaimed | — | `order-detail.html` | — |
+| P-10 | 个人中心 | `/me` | 🟡 unclaimed | — | `profile.html` | — |
+| P-11 | 地址簿 | `/me/addresses` | 🟡 unclaimed | — | — | mockup 待补 |
+| P-12 | 登录页 / 弹层 | `/login` | 🟡 unclaimed | — | `login.html` | — |
+| P-13 | 行车态首页 | `/driving` | 🟡 unclaimed | — | `driving-home.html` | 核心差异化页 |
+
+### 跨页面模块 Modules
+
+| ID | 名称 | 状态 | Owner | 备注 |
+|---|---|---|---|---|
+| M-01 | 顶部状态栏 | 🟡 unclaimed | — | — |
+| M-02 | 全局底栏（行车态） | 🟡 unclaimed | — | — |
+| M-03 | 主题与暗色 | 🟡 unclaimed | — | 与 design-tokens 联动 |
+| M-04 | 路由 & 转场 | 🟡 unclaimed | — | — |
+| M-05 | 全局语音入口 | 🟡 unclaimed | — | — |
+| M-06 | 自提点选择弹层 | 🟡 unclaimed | — | 跨 P-04 / P-06 |
+| M-07 | 通知中心 | 🟡 unclaimed | — | 含 SSE |
+| M-08 | 弱网与缓存 | 🟡 unclaimed | — | IndexedDB + react-query |
+| M-09 | 埋点 | 🟡 unclaimed | — | — |
+| M-10 | 错误与降级 | 🟡 unclaimed | — | — |
+| M-11 | 主题与设计 Token | 🟡 unclaimed | — | 实现见 `packages/design-tokens` |
+| M-12 | DrivingContext ⭐ | 🟡 unclaimed | — | 深模块，ADR-0004 |
+| M-13 | JS Bridge 抽象 | 🟡 unclaimed | — | 多车厂 stub |
+
+### 后端服务 Backend Modules（per ADR-0002 modular monolith）
+
+| ID | 名称 | 状态 | Owner | 备注 |
+|---|---|---|---|---|
+| BE-catalog | 商品服务 | 🟡 unclaimed | — | — |
+| BE-cart | 购物车服务 | 🟡 unclaimed | — | Redis-heavy |
+| BE-order | 订单服务 | 🟡 unclaimed | — | 含状态机 |
+| BE-payment | 支付服务（mock） | 🟡 unclaimed | — | — |
+| BE-user | 账号服务 | 🟡 unclaimed | — | JWT |
+| BE-fulfillment | 履约服务 | 🟡 unclaimed | — | 自提点 + 物流轨迹 |
+| BE-gateway | API 网关 | 🟡 unclaimed | — | 鉴权 / 限流 / CORS |
+
+---
+
 ## 一、全局页面骨架 (IVI Shell)
 
 所有页面共享的容器与底层能力。
@@ -661,8 +717,12 @@ sensor_lost --fallback--> parked (打开传感器恢复提示)
 
 ## 八、Open Questions（写完后必须解决）
 
-- [ ] 自提点数据是否需要打通真实地图 API（Demo 阶段建议 mock 5 个固定点）
-- [ ] 「再买一次」的"常用"如何定义？是「近 30 天购买频次 ≥ 2 次」还是「最近一次购买」？建议前者，待业务方确认
-- [ ] 行车态阈值 5km/h 是否合理？参考 GB/T 「车载信息服务」相关规范（待 ADR-0004 落地）
-- [ ] 评价是否在 Demo 阶段做？建议只读、可读评价但不可写（不涉及内容审核），可在 PRD v0.4 中明确
-- [ ] 收藏功能是否在 Demo 范围？建议放出占位 UI 但接口走 mock
+> 任何 agent 拿到一项后，把 Owner 改成自己的 agent-id，状态改成 `🔵 in-progress`；解决后改 `🟢 done` 并在「结论 / commit」列填证据。
+
+| # | 问题 | Owner | 状态 | 建议倾向 / 结论 |
+|---|---|---|---|---|
+| OQ-1 | 自提点数据是否需要打通真实地图 API | — | 🟡 待认领 | Demo 阶段建议 mock 5 个固定点 |
+| OQ-2 | 「再买一次」的"常用"如何定义？ | — | 🟡 待认领 | 建议「近 30 天购买频次 ≥ 2 次」，待业务方确认 |
+| OQ-3 | 行车态阈值 5km/h 是否合理？ | — | 🟢 已解决 | 见 [ADR-0004](./decisions/ADR-0004-driving-state-source.md) · 5km/h + 3s 防抖 |
+| OQ-4 | 评价是否在 Demo 阶段做？ | — | 🟡 待认领 | 建议只读、可读不可写，下次 PRD 升版明确 |
+| OQ-5 | 收藏功能是否在 Demo 范围？ | — | 🟡 待认领 | 建议放出占位 UI 但接口走 mock |

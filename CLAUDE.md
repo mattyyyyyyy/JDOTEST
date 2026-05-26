@@ -87,6 +87,49 @@ INDEX.md 一行一条：`- [标题](相对路径) — 一句话摘要 · 状态 
 4. **结论变更时**：旧 ADR 不删除，改为 Superseded 状态，新 ADR 中 `Supersedes ADR-XXXX`
 5. **图文件**：源文件（.excalidraw / .pen 等）保留在 `diagrams/`，不要只保留截图
 
+## 🤝 多 agent 协作公约（本项目可能并行跑多个 Claude session）
+
+**前提**：本项目允许并行运行多个 Claude 实例同时推进。下面 4 条是硬规则。
+
+### 公约 1 · 开工三件套（任何编辑前必做）
+1. `Read CLAUDE.md`（这个文件）
+2. `Read docs/INDEX.md` 看 **Active Workstreams** 表
+3. 在 INDEX.md 的 Active Workstreams **append 一行**登记你要做什么：`agent-id | 工作范围 | 起始时间 | 预计涉及文件`
+
+**违反后果**：撞车、覆盖别人的工作、产生孤儿文件。已经发生过 5 次，不接受第 6 次。
+
+### 公约 2 · Ownership Zones（按目录分工，先看再动）
+INDEX.md 维护一张 Ownership Zones 表。**改文件前先看你要改的路径在不在别人 zone 里**。
+
+- 别人 zone 里 → coordinate（先到对应文档底部加 comment 说要改什么）
+- 自己 zone 里 → 直接干
+- 无人 zone（自由区）→ 直接干
+
+### 公约 3 · 冲突检测 SOP（发现孤儿文件时）
+如果发现仓库里有 untracked / 非本 agent 写的新文件：
+
+1. **不要直接 commit** —— 先 `Read docs/INDEX.md` 看是否他人 work-in-progress
+2. 如果是别 agent 在做 → 等或 coordinate
+3. 如果是过去遗留 → 加入 INDEX，commit 时注明 `docs(reconcile): integrate orphan ...`
+4. 如果与本 agent 工作冲突 → 触发 reconcile commit，明示「以谁为准」+ 更新 INDEX
+
+### 公约 4 · Append-Only 协作区
+以下文件由多 agent 共享维护，必须 **append-only**（增行不改/删别人行）：
+
+- `docs/INDEX.md` § Active Workstreams 表
+- `docs/INDEX.md` § Recent Activity 时间线（如启用）
+- 任何 `docs/worklog/agent-*.md`（如启用）
+
+其它文档允许覆写，但 **大段重写前必须先在 INDEX 登记** 自己的意图，给其它 agent 看到的机会。
+
+### 自我标识
+
+每个 agent 在 commit 时尽量在 commit message 末尾加自报家门：
+```
+agent: claude-<short-context>
+```
+（不强制，但有助于 git log 排查冲突）
+
 ## 📌 当前结论摘要（避免反复确认）
 
 > 详情见 docs/INDEX.md 与各 ADR
