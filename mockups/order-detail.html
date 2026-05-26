@@ -49,8 +49,8 @@
   .tl-step.current::before { background: var(--color-driving); border-color: var(--color-driving); box-shadow: 0 0 16px var(--color-driving); animation: pulse 1.5s var(--ease-out) infinite; }
   .tl-content { flex: 1; }
   .tl-title { font-size: var(--font-sm); font-weight: var(--weight-semibold); margin-bottom: 4px; }
-  .tl-desc { color: var(--color-text-muted); font-size: 16px; }
-  .tl-time { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-size: 14px; min-width: 140px; text-align: right; }
+  .tl-desc { color: var(--color-text-muted); font-size: var(--font-xs); }
+  .tl-time { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-size: var(--font-xs); min-width: 140px; text-align: right; }
   .tl-step.current .tl-title { color: var(--color-driving); }
   .tl-step.done .tl-title { color: var(--color-text-primary); }
 
@@ -59,7 +59,7 @@
   .od-item { display: grid; grid-template-columns: 100px 1fr auto; gap: var(--space-4); align-items: center; padding: var(--space-3); background: var(--color-bg-1); border-radius: var(--radius-md); }
   .od-item-thumb { width: 100px; height: 100px; border-radius: var(--radius-md); display: grid; place-items: center; font-size: 48px; }
   .od-item-info .t { font-weight: var(--weight-medium); font-size: var(--font-sm); }
-  .od-item-info .s { color: var(--color-text-muted); font-size: 16px; margin-top: 4px; }
+  .od-item-info .s { color: var(--color-text-muted); font-size: var(--font-xs); margin-top: 4px; }
   .od-item-price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: var(--weight-semibold); font-size: var(--font-sm); }
 
   /* right card */
@@ -68,7 +68,7 @@
   .od-meta-card h4 { font-size: var(--font-sm); color: var(--color-text-secondary); font-weight: var(--weight-medium); margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2); }
   .od-meta-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-2) 0; font-size: var(--font-xs); color: var(--color-text-secondary); }
   .od-meta-row .v { color: var(--color-text-primary); font-family: var(--font-mono); }
-  .od-meta-row .copy { color: var(--color-mint); cursor: pointer; font-size: 14px; margin-left: var(--space-2); }
+  .od-meta-row .copy { color: var(--color-mint); cursor: pointer; font-size: var(--font-xs); margin-left: var(--space-2); }
 
   /* Map placeholder */
   .map-mini {

@@ -88,7 +88,7 @@
   }
   .filter-tab:hover { background: var(--color-bg-3); }
   .filter-tab.active { color: var(--color-mint); border-color: rgba(94, 234, 212, 0.40); background: rgba(94, 234, 212, 0.06); }
-  .filter-tab .count { font-family: var(--font-mono); padding: 2px 8px; background: var(--color-bg-1); border-radius: var(--radius-pill); font-size: 13px; }
+  .filter-tab .count { font-family: var(--font-mono); padding: 2px 8px; background: var(--color-bg-1); border-radius: var(--radius-pill); font-size: var(--font-xs); }
 
   /* Screen grid */
   .screens {
@@ -137,7 +137,7 @@
   .screen-info { padding: var(--space-5) var(--space-5) var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
   .screen-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-3); }
   .screen-title { font-family: var(--font-display); font-size: var(--font-lg); font-weight: var(--weight-semibold); letter-spacing: -0.02em; }
-  .screen-route { font-family: var(--font-mono); color: var(--color-text-muted); font-size: 14px; }
+  .screen-route { font-family: var(--font-mono); color: var(--color-text-muted); font-size: var(--font-xs); }
   .screen-desc { color: var(--color-text-secondary); font-size: var(--font-xs); line-height: 1.5; }
   .screen-tags { display: flex; gap: var(--space-2); flex-wrap: wrap; }
   .screen-actions { margin-top: var(--space-3); display: flex; gap: var(--space-3); }
@@ -160,8 +160,8 @@
   .doc-card:hover { background: var(--color-bg-3); border-color: var(--color-border-strong); }
   .doc-card .ic { width: 56px; height: 56px; border-radius: var(--radius-md); display: grid; place-items: center; }
   .doc-card .t { font-weight: var(--weight-semibold); font-size: var(--font-base); }
-  .doc-card .d { color: var(--color-text-muted); font-size: 14px; }
-  .doc-card .path { font-family: var(--font-mono); color: var(--color-accent); font-size: 14px; word-break: break-all; }
+  .doc-card .d { color: var(--color-text-muted); font-size: var(--font-xs); }
+  .doc-card .path { font-family: var(--font-mono); color: var(--color-accent); font-size: var(--font-xs); word-break: break-all; }
 
   /* Footer */
   .index-foot {
@@ -170,7 +170,7 @@
     border-top: 1px solid var(--color-border-subtle);
     display: flex; justify-content: space-between; align-items: center;
     color: var(--color-text-muted);
-    font-size: 14px;
+    font-size: var(--font-xs);
   }
 </style>
 </head>
@@ -201,7 +201,7 @@
   <button class="filter-tab active"><i data-lucide="layers" style="width:18px;height:18px"></i>全部页面 <span class="count">11</span></button>
   <button class="filter-tab"><i data-lucide="parking-circle" style="width:18px;height:18px"></i>停车态完整体验 <span class="count">10</span></button>
   <button class="filter-tab"><i data-lucide="navigation" style="width:18px;height:18px;color:var(--color-driving)"></i><span style="color:var(--color-driving)">行车态降级</span> <span class="count">1</span></button>
-  <div style="margin-left:auto;color:var(--color-text-muted);font-size:14px;display:flex;align-items:center;gap:var(--space-2)">
+  <div style="margin-left:auto;color:var(--color-text-muted);font-size: var(--font-xs);display:flex;align-items:center;gap:var(--space-2)">
     <i data-lucide="info" style="width:16px;height:16px"></i>
     点击任一卡片打开实际页面；缩略图为 27% 缩放预览
   </div>

@@ -73,7 +73,7 @@
   .hot-chip:nth-child(1) .rank { color: #EF4444; }
   .hot-chip:nth-child(2) .rank { color: #F59E0B; }
   .hot-chip:nth-child(3) .rank { color: #F59E0B; }
-  .hot-chip .trend { font-size: 14px; color: var(--color-error); }
+  .hot-chip .trend { font-size: var(--font-xs); color: var(--color-error); }
 
   /* Two-col: history + suggestion */
   .search-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--space-5); }
@@ -100,7 +100,7 @@
   .sug-product-thumb { width: 72px; height: 72px; border-radius: var(--radius-sm); display: grid; place-items: center; font-size: 36px; }
   .sug-product-info { min-width: 0; }
   .sug-product-info .t { font-weight: var(--weight-medium); font-size: var(--font-sm); margin-bottom: 2px; }
-  .sug-product-info .s { color: var(--color-text-muted); font-size: 14px; }
+  .sug-product-info .s { color: var(--color-text-muted); font-size: var(--font-xs); }
   .sug-product-info .t .hl { color: var(--color-mint); font-weight: var(--weight-bold); }
 </style>
 </head>
@@ -152,7 +152,7 @@
           </div>
           <div style="flex:1">
             <div style="font-weight:var(--weight-semibold);font-size:var(--font-sm);margin-bottom:2px">语音识别中…说出你想买的</div>
-            <div style="font-size:14px;color:rgba(94, 234, 212, 0.70)">已识别：「我要买 <strong>玻璃水</strong> · 防冻型 · 4 瓶」</div>
+            <div style="font-size: var(--font-xs);color:rgba(94, 234, 212, 0.70)">已识别：「我要买 <strong>玻璃水</strong> · 防冻型 · 4 瓶」</div>
           </div>
           <button class="btn btn-ghost" style="min-height:56px;color:var(--color-mint)">完成</button>
         </div>
@@ -193,7 +193,7 @@
         <section class="search-section">
           <div class="ss-head">
             <div class="ss-title">和「玻璃水」相关</div>
-            <span class="text-muted" style="font-size:14px">实时联想 · 8 条结果</span>
+            <span class="text-muted" style="font-size: var(--font-xs)">实时联想 · 8 条结果</span>
           </div>
           <div class="sug-products">
             <a class="sug-product" onclick="location.href='product-detail.html'">

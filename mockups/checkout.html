@@ -30,7 +30,7 @@
   .delivery-tab.active { border-color: var(--color-mint); background: linear-gradient(135deg, rgba(94, 234, 212, 0.06), transparent); }
   .delivery-tab .head { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-semibold); color: var(--color-text-primary); font-size: var(--font-sm); margin-bottom: var(--space-2); }
   .delivery-tab.active .head { color: var(--color-mint); }
-  .delivery-tab .desc { color: var(--color-text-muted); font-size: 16px; }
+  .delivery-tab .desc { color: var(--color-text-muted); font-size: var(--font-xs); }
 
   /* address card */
   .addr-list { display: flex; flex-direction: column; gap: var(--space-3); }
@@ -47,7 +47,7 @@
   .addr-tag {
     height: 28px; padding: 0 var(--space-2);
     background: var(--color-bg-3); color: var(--color-text-secondary);
-    border-radius: var(--radius-sm); font-size: 14px; font-weight: var(--weight-semibold);
+    border-radius: var(--radius-sm); font-size: var(--font-xs); font-weight: var(--weight-semibold);
     display: inline-flex; align-items: center;
   }
   .addr.active .addr-tag { background: rgba(94, 234, 212, 0.20); color: var(--color-mint); }
@@ -205,7 +205,7 @@
 
           <!-- 4. Note -->
           <section class="co-section">
-            <div class="co-section-title"><span class="num">4</span>订单备注 <span style="color:var(--color-text-muted);font-size:14px;font-weight:var(--weight-regular);margin-left:var(--space-3)">行车态自动跳过</span></div>
+            <div class="co-section-title"><span class="num">4</span>订单备注 <span style="color:var(--color-text-muted);font-size: var(--font-xs);font-weight:var(--weight-regular);margin-left:var(--space-3)">行车态自动跳过</span></div>
             <input class="note-input" placeholder="选填，10:30 后到取货 / 不要敲门…" />
           </section>
         </div>
@@ -247,7 +247,7 @@
             提交订单 · 安全支付
           </button>
 
-          <div style="text-align:center;color:var(--color-text-muted);font-size:14px;margin-top:var(--space-3)">
+          <div style="text-align:center;color:var(--color-text-muted);font-size: var(--font-xs);margin-top:var(--space-3)">
             点击即同意《JDO Mall 用户协议》《隐私政策》
           </div>
         </aside>
