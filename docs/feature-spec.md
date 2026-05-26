@@ -451,6 +451,10 @@
 
 ## 三、跨页面模块
 
+> **命名约定**：本节 M-01 ~ M-13 是「UI 壳层 / 基础设施模块」（顶栏、底栏、主题、JS Bridge 等），更接近"全局组件"。
+> 与 [`docs/PRD.md §模块拆分`](./PRD.md#模块拆分深模块优先) **不是同一层概念** —— 那边列的是业务领域深模块（cart / order / payment 等），是后端/前端 store 视角。
+> 仅 **M-12 DrivingContext** 同时出现在两边，因为它既是业务关键深模块也是 UI 壳层基座。
+
 ### M-06 自提点选择
 - 弹层组件，跨 P-04 商品详情、P-06 结算页
 - 拉 `GET /api/v1/fulfillment/pickup-points?lat=&lng=&radius=`
