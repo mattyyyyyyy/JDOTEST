@@ -1,10 +1,15 @@
-# 页面功能清单 Page Spec
+# 页面 UI 设计规范 Page UI Spec
 
 > 版本：v0.1 · 日期：2026-05-25 · 状态：Draft
 > 上游：[PRD.md](../PRD.md) §4 功能范围 · [ADR-0007](../decisions/ADR-0007-ui-library-and-design-system.md) UI 起点
-> 下游：`apps/h5/src/pages/*` 实现的对齐基准
-
-本文件为 UI 编码前的最终对齐文档。所有页面只看本文写代码，不允许"按印象写"。
+> 下游：`apps/h5/src/pages/*` 与 `packages/design-tokens` 实现的对齐基准
+>
+> **📌 文档分工**（避免与平行文档冲突，全部见 [INDEX.md](../INDEX.md)）：
+> - **本文件（page-spec）**：**设计调性 + 视觉区块布局 + mock 字段** — UI 视觉层权威源
+> - [`docs/feature-spec.md`](../feature-spec.md)：**路由命名 + 功能拆解 + 状态机 + 接口** — 工程实现层权威源（**路由名称以它为准**，不一致时改本文）
+> - [`docs/research/competitor-analysis.md`](../research/competitor-analysis.md)：竞品调研，设计 token 与字号/对比度依据
+>
+> 任何一项页面落代码前对照三份文件，本文负责"长什么样"，feature-spec 负责"做什么/什么状态/调什么接口"。
 
 ---
 

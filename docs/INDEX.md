@@ -9,6 +9,7 @@
 
 - [CLAUDE.md](../CLAUDE.md) — 项目协作铁律 · Accepted · 2026-05-25
 - [docs/PRD.md](./PRD.md) — 产品需求文档 v0.3 · Draft · 2026-05-25
+- [docs/feature-spec.md](./feature-spec.md) — **详细功能清单 v1.0 · 路由命名 / 功能拆解 / 状态机 / 接口 / 验收 checklist 的权威源** · Draft · 2026-05-26
 
 ## 📐 架构设计 architecture/
 
@@ -18,11 +19,13 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 
 ## 🎨 设计 design/
 
-> UI / UX 设计规范、页面清单、设计 token。
+> UI / UX 设计规范、页面视觉布局、设计 token。
 
 | 文档 | 摘要 | 状态 | 日期 |
 |---|---|---|---|
-| [page-spec.md](./design/page-spec.md) | 10 个页面功能清单 + 设计调性（液态玻璃/近黑/高对比/大点击）+ 行车态差异 + mock 数据字段 + 首批 5 页建议 | Draft | 2026-05-25 |
+| [page-spec.md](./design/page-spec.md) | **UI 视觉层权威源** · 设计调性（液态玻璃/近黑/高对比/大点击）+ 10 页区块布局 + mock 字段 + 首批 5 页建议 | Draft | 2026-05-25 |
+
+> 路由命名以 [feature-spec.md](./feature-spec.md) 为准，不一致时改 page-spec。
 
 ## 📋 架构决策记录 decisions/
 
@@ -43,9 +46,11 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 
 ## 🔍 调研报告 research/
 
-> 技术选型对比、可行性分析。
+> 技术选型对比、竞品调研、可行性分析。
 
-_暂无_
+| 文档 | 摘要 | 状态 | 日期 |
+|---|---|---|---|
+| [competitor-analysis.md](./research/competitor-analysis.md) | 7 家车厂竞品（NIO / 理想 / 问界 / Tesla / 小鹏 / 小米 / Polestar）+ AAOS / NHTSA / HarmonyOS HMI 规范 + 给我们 Demo 的设计建议 | Draft | 2026-05-26 |
 
 ## 🖼 图示 diagrams/（仓库根目录）
 
