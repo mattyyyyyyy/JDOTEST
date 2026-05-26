@@ -8,7 +8,8 @@
 ## 📌 入口文档（必读）
 
 - [CLAUDE.md](../CLAUDE.md) — 项目协作铁律 · Accepted · 2026-05-25
-- [docs/PRD.md](./PRD.md) — 产品需求文档 v0.3 · Draft · 2026-05-25
+- [docs/PRD.md](./PRD.md) — 产品需求文档 v0.4 · Draft · 2026-05-26
+- [mockups/index.html](../mockups/index.html) — **11 屏高保真原型总览**（浏览器打开即看）· v1.0 · 2026-05-26
 - [docs/feature-spec.md](./feature-spec.md) — **详细功能清单 v1.0 · 路由命名 / 功能拆解 / 状态机 / 接口 / 验收 checklist 的权威源** · Draft · 2026-05-26
 
 ## 📐 架构设计 architecture/
@@ -19,13 +20,35 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 
 ## 🎨 设计 design/
 
-> UI / UX 设计规范、页面视觉布局、设计 token。
+> UI / UX 设计规范、页面视觉布局、设计 token、设计系统。
 
 | 文档 | 摘要 | 状态 | 日期 |
 |---|---|---|---|
-| [page-spec.md](./design/page-spec.md) | **UI 视觉层权威源** · 设计调性（液态玻璃/近黑/高对比/大点击）+ 10 页区块布局 + mock 字段 + 首批 5 页建议 | Draft | 2026-05-25 |
+| [design-system.md](./design/design-system.md) | **设计系统 v1.0 · 系统级 token 与组件契约的单一真相**（颜色 / 字号 / 间距 / 动效 / 行车态降级 / 横屏适配） | Draft | 2026-05-26 |
+| [page-spec.md](./design/page-spec.md) | **UI 视觉层权威源** · 设计调性 + 10 页区块布局 + mock 字段 + 首批 5 页建议 | Draft | 2026-05-25 |
 
-> 路由命名以 [feature-spec.md](./feature-spec.md) 为准，不一致时改 page-spec。
+## 🖥 高保真静态原型 mockups/（仓库根目录）
+
+| 文件 | 用途 | 最后更新 |
+|---|---|---|
+| [index.html](../mockups/index.html) | **总览导航 · 11 屏缩略图 + 跳文档** | 2026-05-26 |
+| [home.html](../mockups/home.html) | 首页（停车态）· Hero / 分类 / 再买 / 秒杀 / 推荐 | 2026-05-26 |
+| [category.html](../mockups/category.html) | 分类页 · 左 sticky 一级 + 商品 grid | 2026-05-26 |
+| [search.html](../mockups/search.html) | 搜索 · 大输入 + 巨型语音 + 联想 | 2026-05-26 |
+| [product-detail.html](../mockups/product-detail.html) | 商品详情 · 横屏左右 60/40 分栏 | 2026-05-26 |
+| [cart.html](../mockups/cart.html) | 购物车 · 表格化 + sticky 玻璃合计 | 2026-05-26 |
+| [checkout.html](../mockups/checkout.html) | 结算 · 含「送到车上」差异化配送 | 2026-05-26 |
+| [payment.html](../mockups/payment.html) | 支付 · 大二维码 + 88px 巨额价 | 2026-05-26 |
+| [order-detail.html](../mockups/order-detail.html) | 订单详情 · 64px 取货码 + 物流时间线 | 2026-05-26 |
+| [profile.html](../mockups/profile.html) | 个人中心 · 数据卡 + 设置 + Demo 速度模拟器 | 2026-05-26 |
+| [login.html](../mockups/login.html) | 车机扫码登录 · 左 pitch + 右 440px QR | 2026-05-26 |
+| [driving-home.html](../mockups/driving-home.html) | **行车态首页（核心差异化）** · 3 张巨卡 + 120px 主按钮 | 2026-05-26 |
+| [styles/tokens.css](../mockups/styles/tokens.css) | CSS 变量，与 design-system.md §1 一致 | 2026-05-26 |
+| [styles/base.css](../mockups/styles/base.css) | reset + 全局基础样式 | 2026-05-26 |
+| [styles/components.css](../mockups/styles/components.css) | 通用组件样式 | 2026-05-26 |
+
+> 路由命名以 [feature-spec.md](./feature-spec.md) 为准，不一致时改 page-spec / mockups。
+> 这些 mockups 是 React 实装的视觉对照基准。`packages/design-tokens` 落地时直接从 `mockups/styles/tokens.css` 迁移。
 
 ## 📋 架构决策记录 decisions/
 
@@ -57,7 +80,7 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 | 文件 | 用途 | 最后更新 |
 |---|---|---|
 | [information-architecture.excalidraw](../diagrams/information-architecture.excalidraw) | 信息架构图（IA） | 2026-05-25 |
-| _system-architecture.excalidraw_ | 系统技术架构图（待生成） | — |
+| [system-architecture.excalidraw](../diagrams/system-architecture.excalidraw) | 系统技术架构图 | 2026-05-25 |
 
 ---
 

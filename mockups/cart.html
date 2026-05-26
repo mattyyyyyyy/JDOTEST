@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-mode="parked">
+<head>
+<meta charset="utf-8" />
+<title>购物车 · 车机商城</title>
+<meta name="viewport" content="width=1920" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/components.css">
+<style>
+  .cart-grid { display: grid; grid-template-columns: 1fr 420px; gap: var(--space-6); align-items: start; }
+
+  /* cart item */
+  .cart-list { display: flex; flex-direction: column; gap: var(--space-4); }
+  .cart-row {
+    display: grid; grid-template-columns: 56px 140px 1fr auto auto auto;
+    gap: var(--space-5); align-items: center;
+    padding: var(--space-5);
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+  .cart-row:hover { border-color: var(--color-border-default); }
+  .cart-row.selected { border-color: rgba(94, 234, 212, 0.30); background: linear-gradient(90deg, rgba(94, 234, 212, 0.04), transparent); }
+
+  /* checkbox */
+  .check {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--color-border-strong);
+    display: grid; place-items: center;
+    color: transparent;
+    cursor: pointer;
+    transition: all var(--duration-fast);
+  }
+  .check.checked { background: var(--color-mint); border-color: var(--color-mint); color: #0a0b0e; }
+
+  .cart-thumb { width: 140px; height: 140px; border-radius: var(--radius-md); display: grid; place-items: center; font-size: 64px; }
+  .cart-meta { min-width: 0; }
+  .cart-meta-title { font-weight: var(--weight-semibold); font-size: var(--font-base); margin-bottom: var(--space-2); }
+  .cart-meta-spec { color: var(--color-text-muted); font-size: var(--font-xs); margin-bottom: var(--space-3); }
+  .cart-meta-tags { display: flex; gap: var(--space-2); }
+
+  .cart-price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: var(--weight-bold); font-size: var(--font-lg); color: var(--color-text-primary); text-align: right; min-width: 120px; }
+  .cart-price small { font-size: var(--font-xs); color: var(--color-text-muted); font-weight: var(--weight-regular); }
+
+  .cart-stepper { display: inline-flex; align-items: center; background: var(--color-bg-3); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); }
+  .cart-stepper button { width: 56px; height: 56px; display: grid; place-items: center; color: var(--color-text-primary); }
+  .cart-stepper .num { width: 56px; height: 56px; display: grid; place-items: center; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--font-base); font-weight: var(--weight-semibold); border-left: 1px solid var(--color-border-default); border-right: 1px solid var(--color-border-default); }
+
+  .cart-delete { width: 56px; height: 56px; display: grid; place-items: center; color: var(--color-text-muted); border-radius: var(--radius-md); transition: all var(--duration-fast); }
+  .cart-delete:hover { color: var(--color-error); background: var(--color-error-bg); }
+
+  /* summary */
+  .summary {
+    position: sticky; top: calc(88px + var(--space-6));
+    background: var(--color-surface-glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    display: flex; flex-direction: column; gap: var(--space-4);
+    box-shadow: var(--shadow-glass);
+  }
+  .summary h3 { font-size: var(--font-lg); margin-bottom: var(--space-2); }
+  .sum-row { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--font-sm); }
+  .sum-row.muted { color: var(--color-text-muted); }
+  .sum-row .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .sum-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: var(--space-4); border-top: 1px solid var(--color-border-default); }
+  .sum-total .label { color: var(--color-text-secondary); }
+  .sum-total .v { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--font-2xl); font-weight: var(--weight-bold); color: var(--color-mint); letter-spacing: -0.04em; }
+  .sum-total .v small { font-size: var(--font-base); color: var(--color-mint); }
+
+  /* coupon / promo */
+  .promo {
+    margin-top: var(--space-3);
+    padding: var(--space-4);
+    background: rgba(214, 188, 138, 0.06);
+    border: 1px dashed rgba(214, 188, 138, 0.30);
+    border-radius: var(--radius-md);
+    color: var(--color-gold);
+    font-size: var(--font-xs);
+    display: flex; gap: var(--space-3); align-items: center;
+  }
+
+  .footer-bar {
+    height: 96px;
+    padding: 0 var(--space-5);
+    display: flex; align-items: center; gap: var(--space-5);
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    margin-top: var(--space-4);
+  }
+  .footer-bar .select-all { display: flex; align-items: center; gap: var(--space-3); color: var(--color-text-secondary); font-size: var(--font-sm); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- TopBar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">J</div>
+      <span>JDO Mall</span>
+    </div>
+    <nav class="topbar-nav">
+      <a class="nav-item" href="home.html">首页</a>
+      <a class="nav-item" href="category.html">分类</a>
+      <a class="nav-item" href="order-detail.html">订单</a>
+      <a class="nav-item" href="profile.html">我的</a>
+      <div class="topbar-search">
+        <i data-lucide="search" style="width:24px;height:24px;color:var(--color-text-muted)"></i>
+        <input placeholder="搜你想要的…" />
+      </div>
+    </nav>
+    <div class="topbar-actions">
+      <div class="mode-badge"><span class="dot"></span>停车态</div>
+      <button class="icon-btn">
+        <i data-lucide="shopping-cart" style="width:32px;height:32px"></i>
+        <span class="badge">3</span>
+      </button>
+      <button class="icon-btn"><i data-lucide="user" style="width:32px;height:32px"></i></button>
+    </div>
+  </header>
+
+  <div class="main">
+    <nav class="rail">
+      <a class="rail-item" href="home.html"><i data-lucide="home" style="width:28px;height:28px"></i><span>首页</span></a>
+      <a class="rail-item" href="category.html"><i data-lucide="grid-2x2" style="width:28px;height:28px"></i><span>全部分类</span></a>
+      <a class="rail-item" href="order-detail.html"><i data-lucide="package" style="width:28px;height:28px"></i><span>我的订单</span></a>
+      <a class="rail-item active"><i data-lucide="shopping-cart" style="width:28px;height:28px"></i><span>购物车</span></a>
+      <a class="rail-item" href="driving-home.html"><i data-lucide="navigation" style="width:28px;height:28px;color:var(--color-driving)"></i><span style="color:var(--color-driving)">行车态预览</span></a>
+    </nav>
+
+    <main class="content">
+      <div class="section-header">
+        <div>
+          <div class="section-title">购物车</div>
+          <div class="section-subtitle">共 3 件商品 · 已选 2 件 · 24 小时未结算商品会自动通知</div>
+        </div>
+        <a class="section-more"><i data-lucide="archive-x" style="width:20px;height:20px"></i> 清空购物车</a>
+      </div>
+
+      <div class="cart-grid">
+        <!-- Left: items -->
+        <div>
+          <div class="cart-list">
+            <!-- row 1 -->
+            <div class="cart-row selected">
+              <div class="check checked"><i data-lucide="check" style="width:24px;height:24px"></i></div>
+              <div class="cart-thumb grad-cyan">📹</div>
+              <div class="cart-meta">
+                <div class="cart-meta-title">海康威视 K3 旗舰行车记录仪</div>
+                <div class="cart-meta-spec">颜色：深空黑 · 套餐：标配 + 64G 卡</div>
+                <div class="cart-meta-tags">
+                  <span class="badge badge-flash">⚡ 限时 7 折</span>
+                  <span class="badge badge-info">顺丰次日达</span>
+                </div>
+              </div>
+              <div class="cart-stepper">
+                <button><i data-lucide="minus" style="width:20px;height:20px"></i></button>
+                <div class="num">1</div>
+                <button><i data-lucide="plus" style="width:20px;height:20px"></i></button>
+              </div>
+              <div class="cart-price">
+                ¥349<br/><small style="text-decoration:line-through">¥499</small>
+              </div>
+              <button class="cart-delete"><i data-lucide="trash-2" style="width:24px;height:24px"></i></button>
+            </div>
+
+            <!-- row 2 -->
+            <div class="cart-row selected">
+              <div class="check checked"><i data-lucide="check" style="width:24px;height:24px"></i></div>
+              <div class="cart-thumb grad-blue">💧</div>
+              <div class="cart-meta">
+                <div class="cart-meta-title">蓝月星 玻璃水 -25℃ 防冻型</div>
+                <div class="cart-meta-spec">规格：2L × 4 瓶装</div>
+                <div class="cart-meta-tags">
+                  <span class="badge badge-gold">已购 4 次</span>
+                </div>
+              </div>
+              <div class="cart-stepper">
+                <button><i data-lucide="minus" style="width:20px;height:20px"></i></button>
+                <div class="num">2</div>
+                <button><i data-lucide="plus" style="width:20px;height:20px"></i></button>
+              </div>
+              <div class="cart-price">¥58<br/><small>单价 ¥29</small></div>
+              <button class="cart-delete"><i data-lucide="trash-2" style="width:24px;height:24px"></i></button>
+            </div>
+
+            <!-- row 3 (unselected) -->
+            <div class="cart-row">
+              <div class="check"></div>
+              <div class="cart-thumb grad-amber">🌸</div>
+              <div class="cart-meta">
+                <div class="cart-meta-title">观夜 车载固体香氛 海盐木质</div>
+                <div class="cart-meta-spec">气味：海盐木质 · 容量：12g · 续香 60 天</div>
+                <div class="cart-meta-tags">
+                  <span class="badge badge-new">↑ 月销 3.1k</span>
+                </div>
+              </div>
+              <div class="cart-stepper">
+                <button><i data-lucide="minus" style="width:20px;height:20px"></i></button>
+                <div class="num">1</div>
+                <button><i data-lucide="plus" style="width:20px;height:20px"></i></button>
+              </div>
+              <div class="cart-price">¥49</div>
+              <button class="cart-delete"><i data-lucide="trash-2" style="width:24px;height:24px"></i></button>
+            </div>
+          </div>
+
+          <!-- Footer select-all -->
+          <div class="footer-bar">
+            <div class="select-all">
+              <div class="check"><i data-lucide="check" style="width:24px;height:24px;color:transparent"></i></div>
+              全选（已选 2 / 3）
+            </div>
+            <div style="margin-left:auto;color:var(--color-text-muted);font-size:var(--font-xs)">
+              <i data-lucide="info" style="width:16px;height:16px;display:inline;vertical-align:-3px"></i>
+              满 ¥199 享免运费 · 已满足
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: summary -->
+        <aside class="summary">
+          <h3>价格明细</h3>
+          <div class="sum-row"><span>商品小计（2 件）</span><span class="v">¥407.00</span></div>
+          <div class="sum-row muted"><span>限时优惠</span><span class="v">−¥150.00</span></div>
+          <div class="sum-row muted"><span>满减券</span><span class="v">−¥20.00</span></div>
+          <div class="sum-row"><span>运费</span><span class="v">¥0.00</span></div>
+
+          <div class="promo">
+            <i data-lucide="gift" style="width:20px;height:20px"></i>
+            <span>再加 ¥61 升级到「次日 19 点前送达」</span>
+          </div>
+
+          <div class="sum-total">
+            <span class="label">应付</span>
+            <span class="v"><small>¥</small>237<small>.00</small></span>
+          </div>
+
+          <button class="btn btn-primary btn-hero" onclick="location.href='checkout.html'" style="width:100%;margin-top:var(--space-3)">
+            去结算（2 件）
+            <i data-lucide="arrow-right" style="width:28px;height:28px"></i>
+          </button>
+
+          <div style="text-align:center;color:var(--color-text-muted);font-size:14px">
+            <i data-lucide="shield-check" style="width:14px;height:14px;display:inline;vertical-align:-2px"></i>
+            假一赔三 · 7 天无理由 · 闪电退款
+          </div>
+        </aside>
+      </div>
+
+      <div style="height:var(--space-7)"></div>
+    </main>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-mode="parked">
+<head>
+<meta charset="utf-8" />
+<title>搜索 · 车机商城</title>
+<meta name="viewport" content="width=1920" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/components.css">
+<style>
+  .search-hero {
+    padding: var(--space-7);
+    background:
+      radial-gradient(ellipse 800px 500px at 50% 100%, rgba(94, 234, 212, 0.10), transparent 60%),
+      linear-gradient(160deg, var(--color-bg-2), var(--color-bg-1));
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    display: flex; flex-direction: column; gap: var(--space-5);
+  }
+
+  .search-row { display: grid; grid-template-columns: 1fr 120px; gap: var(--space-4); align-items: center; }
+
+  .big-search {
+    height: 96px; padding: 0 var(--space-5);
+    display: flex; align-items: center; gap: var(--space-4);
+    background: var(--color-bg-1);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    transition: all var(--duration-fast);
+  }
+  .big-search:focus-within { border-color: var(--color-mint); box-shadow: var(--glow-mint); }
+  .big-search input { flex: 1; background: transparent; border: 0; outline: none; font-size: var(--font-lg); color: var(--color-text-primary); font-family: inherit; }
+  .big-search input::placeholder { color: var(--color-text-muted); }
+
+  .voice-btn {
+    width: 120px; height: 96px;
+    display: flex; align-items: center; justify-content: center; gap: var(--space-3);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-brand-500));
+    color: #03171f;
+    border-radius: var(--radius-lg);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-base);
+    box-shadow: var(--glow-accent);
+    transition: all var(--duration-fast);
+  }
+  .voice-btn:hover { transform: scale(1.02); }
+
+  .listening-bar {
+    padding: var(--space-4) var(--space-5);
+    background: rgba(94, 234, 212, 0.08);
+    border: 1px dashed rgba(94, 234, 212, 0.30);
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; gap: var(--space-4);
+    color: var(--color-mint);
+  }
+  .listening-bar .wave { display: flex; gap: 4px; align-items: center; height: 32px; }
+  .listening-bar .wave span { width: 4px; background: var(--color-mint); border-radius: 2px; animation: wave 1.2s ease-in-out infinite; }
+  .listening-bar .wave span:nth-child(2) { animation-delay: 0.1s; }
+  .listening-bar .wave span:nth-child(3) { animation-delay: 0.2s; }
+  .listening-bar .wave span:nth-child(4) { animation-delay: 0.3s; }
+  .listening-bar .wave span:nth-child(5) { animation-delay: 0.4s; }
+  @keyframes wave { 0%, 100% { height: 8px; } 50% { height: 32px; } }
+
+  .hot-search { display: flex; flex-direction: column; gap: var(--space-3); }
+  .hot-label { display: flex; align-items: center; gap: var(--space-2); color: var(--color-text-secondary); font-size: var(--font-xs); font-weight: var(--weight-medium); }
+  .hot-chips { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .hot-chip { display: inline-flex; align-items: center; gap: var(--space-2); height: 56px; padding: 0 var(--space-4); background: var(--color-bg-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-pill); color: var(--color-text-secondary); font-size: var(--font-xs); cursor: pointer; transition: all var(--duration-fast); }
+  .hot-chip:hover { color: var(--color-text-primary); border-color: var(--color-border-strong); }
+  .hot-chip .rank { font-family: var(--font-mono); font-weight: var(--weight-bold); }
+  .hot-chip:nth-child(1) .rank { color: #EF4444; }
+  .hot-chip:nth-child(2) .rank { color: #F59E0B; }
+  .hot-chip:nth-child(3) .rank { color: #F59E0B; }
+  .hot-chip .trend { font-size: 14px; color: var(--color-error); }
+
+  /* Two-col: history + suggestion */
+  .search-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--space-5); }
+  .search-section {
+    padding: var(--space-5);
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+  }
+  .ss-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
+  .ss-title { font-size: var(--font-base); font-weight: var(--weight-semibold); }
+
+  .history-list { display: flex; flex-direction: column; gap: var(--space-2); }
+  .history-item { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); cursor: pointer; transition: all var(--duration-fast); }
+  .history-item:hover { background: var(--color-bg-3); }
+  .history-item .ic { color: var(--color-text-muted); }
+  .history-item .text { flex: 1; font-size: var(--font-sm); }
+  .history-item .x { color: var(--color-text-muted); }
+
+  /* suggested products */
+  .sug-products { display: flex; flex-direction: column; gap: var(--space-3); }
+  .sug-product { display: grid; grid-template-columns: 72px 1fr auto; gap: var(--space-4); align-items: center; padding: var(--space-3); background: var(--color-bg-1); border-radius: var(--radius-md); cursor: pointer; transition: all var(--duration-fast); }
+  .sug-product:hover { background: var(--color-bg-3); }
+  .sug-product-thumb { width: 72px; height: 72px; border-radius: var(--radius-sm); display: grid; place-items: center; font-size: 36px; }
+  .sug-product-info { min-width: 0; }
+  .sug-product-info .t { font-weight: var(--weight-medium); font-size: var(--font-sm); margin-bottom: 2px; }
+  .sug-product-info .s { color: var(--color-text-muted); font-size: 14px; }
+  .sug-product-info .t .hl { color: var(--color-mint); font-weight: var(--weight-bold); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">J</div><span>JDO Mall</span></div>
+    <nav class="topbar-nav">
+      <a class="nav-item" href="home.html">首页</a>
+      <a class="nav-item" href="category.html">分类</a>
+      <a class="nav-item" href="order-detail.html">订单</a>
+      <a class="nav-item" href="profile.html">我的</a>
+    </nav>
+    <div class="topbar-actions">
+      <div class="mode-badge"><span class="dot"></span>停车态</div>
+      <button class="icon-btn" onclick="location.href='cart.html'"><i data-lucide="shopping-cart" style="width:32px;height:32px"></i></button>
+      <button class="icon-btn" onclick="location.href='profile.html'"><i data-lucide="user" style="width:32px;height:32px"></i></button>
+    </div>
+  </header>
+
+  <div class="main">
+    <nav class="rail">
+      <a class="rail-item" href="home.html"><i data-lucide="home" style="width:28px;height:28px"></i><span>首页</span></a>
+      <a class="rail-item" href="category.html"><i data-lucide="grid-2x2" style="width:28px;height:28px"></i><span>全部分类</span></a>
+      <a class="rail-item active"><i data-lucide="search" style="width:28px;height:28px"></i><span>搜索</span></a>
+      <a class="rail-item" href="order-detail.html"><i data-lucide="package" style="width:28px;height:28px"></i><span>我的订单</span></a>
+      <a class="rail-item" href="driving-home.html"><i data-lucide="navigation" style="width:28px;height:28px;color:var(--color-driving)"></i><span style="color:var(--color-driving)">行车态预览</span></a>
+    </nav>
+
+    <main class="content">
+      <!-- Big search bar -->
+      <section class="search-hero noise">
+        <div class="search-row">
+          <div class="big-search">
+            <i data-lucide="search" style="width:32px;height:32px;color:var(--color-text-muted)"></i>
+            <input placeholder="搜索商品、品牌或类目…" value="玻璃水" />
+            <button class="icon-btn" style="width:56px;height:56px"><i data-lucide="x" style="width:24px;height:24px"></i></button>
+          </div>
+          <button class="voice-btn">
+            <i data-lucide="mic" style="width:32px;height:32px"></i>
+            <span>语音</span>
+          </button>
+        </div>
+
+        <!-- Listening indicator -->
+        <div class="listening-bar">
+          <div class="wave">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div style="flex:1">
+            <div style="font-weight:var(--weight-semibold);font-size:var(--font-sm);margin-bottom:2px">语音识别中…说出你想买的</div>
+            <div style="font-size:14px;color:rgba(94, 234, 212, 0.70)">已识别：「我要买 <strong>玻璃水</strong> · 防冻型 · 4 瓶」</div>
+          </div>
+          <button class="btn btn-ghost" style="min-height:56px;color:var(--color-mint)">完成</button>
+        </div>
+
+        <!-- Hot searches -->
+        <div class="hot-search">
+          <div class="hot-label"><i data-lucide="flame" style="width:18px;height:18px;color:#EF4444"></i> 热门搜索 · 实时</div>
+          <div class="hot-chips">
+            <button class="hot-chip"><span class="rank">1</span><span>玻璃水 -25℃</span><span class="trend">↑</span></button>
+            <button class="hot-chip"><span class="rank">2</span><span>车载香氛</span><span class="trend">↑</span></button>
+            <button class="hot-chip"><span class="rank">3</span><span>行车记录仪 4K</span><span class="trend">↑</span></button>
+            <button class="hot-chip"><span class="rank">4</span><span>充电器 120W</span></button>
+            <button class="hot-chip"><span class="rank">5</span><span>后备箱收纳</span></button>
+            <button class="hot-chip"><span class="rank">6</span><span>安全锤</span></button>
+            <button class="hot-chip"><span class="rank">7</span><span>颈枕 慢回弹</span></button>
+            <button class="hot-chip"><span class="rank">8</span><span>胎压监测</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- History + suggestions -->
+      <div class="search-grid">
+
+        <section class="search-section">
+          <div class="ss-head">
+            <div class="ss-title">我的搜索历史</div>
+            <button class="btn btn-ghost" style="min-height:48px;color:var(--color-text-muted)"><i data-lucide="trash-2" style="width:18px;height:18px"></i>清空</button>
+          </div>
+          <div class="history-list">
+            <a class="history-item"><span class="ic"><i data-lucide="history" style="width:22px;height:22px"></i></span><span class="text">玻璃水 防冻</span><span class="x"><i data-lucide="x" style="width:18px;height:18px"></i></span></a>
+            <a class="history-item"><span class="ic"><i data-lucide="history" style="width:22px;height:22px"></i></span><span class="text">特斯拉 车充</span><span class="x"><i data-lucide="x" style="width:18px;height:18px"></i></span></a>
+            <a class="history-item"><span class="ic"><i data-lucide="history" style="width:22px;height:22px"></i></span><span class="text">行车记录仪 隐藏式</span><span class="x"><i data-lucide="x" style="width:18px;height:18px"></i></span></a>
+            <a class="history-item"><span class="ic"><i data-lucide="history" style="width:22px;height:22px"></i></span><span class="text">香薰 海盐</span><span class="x"><i data-lucide="x" style="width:18px;height:18px"></i></span></a>
+            <a class="history-item"><span class="ic"><i data-lucide="history" style="width:22px;height:22px"></i></span><span class="text">车载吸尘器 无线</span><span class="x"><i data-lucide="x" style="width:18px;height:18px"></i></span></a>
+          </div>
+        </section>
+
+        <section class="search-section">
+          <div class="ss-head">
+            <div class="ss-title">和「玻璃水」相关</div>
+            <span class="text-muted" style="font-size:14px">实时联想 · 8 条结果</span>
+          </div>
+          <div class="sug-products">
+            <a class="sug-product" onclick="location.href='product-detail.html'">
+              <div class="sug-product-thumb grad-blue">💧</div>
+              <div class="sug-product-info">
+                <div class="t">蓝月星 <span class="hl">玻璃水</span> -25℃ 防冻型 2L × 4</div>
+                <div class="s">补给周期商品 · 已购 4 次</div>
+              </div>
+              <div class="price"><span class="price-symbol">¥</span><span class="price-current">29</span></div>
+            </a>
+            <a class="sug-product">
+              <div class="sug-product-thumb grad-cyan">💧</div>
+              <div class="sug-product-info">
+                <div class="t">龟牌 <span class="hl">玻璃水</span> -40℃ 极寒款 2L</div>
+                <div class="s">月销 642 · 北方车主推荐</div>
+              </div>
+              <div class="price"><span class="price-symbol">¥</span><span class="price-current">39</span></div>
+            </a>
+            <a class="sug-product">
+              <div class="sug-product-thumb grad-amber">💧</div>
+              <div class="sug-product-info">
+                <div class="t">3M <span class="hl">玻璃水</span> 浓缩液 1L</div>
+                <div class="s">1:10 稀释 · 经济款</div>
+              </div>
+              <div class="price"><span class="price-symbol">¥</span><span class="price-current">49</span></div>
+            </a>
+            <a class="sug-product">
+              <div class="sug-product-thumb grad-emerald">🚿</div>
+              <div class="sug-product-info">
+                <div class="t"><span class="hl">玻璃水</span> 雨刷套装（4 瓶 + 雨刷片）</div>
+                <div class="s">组合装 · 月销 234</div>
+              </div>
+              <div class="price"><span class="price-symbol">¥</span><span class="price-current">89</span></div>
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <div style="height:var(--space-7)"></div>
+    </main>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>
