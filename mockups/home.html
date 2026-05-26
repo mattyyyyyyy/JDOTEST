@@ -2,890 +2,712 @@
 <html lang="zh-CN" data-theme="dark" data-mode="parked">
 <head>
 <meta charset="utf-8" />
-<title>商城首页 · 车机商城 (2560×1600)</title>
+<title>商城 · 车机商城 (2560×1600)</title>
 <meta name="viewport" content="width=2560">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/tokens.css">
 <link rel="stylesheet" href="styles/base.css">
-<link rel="stylesheet" href="styles/components.css">
 <style>
-  /* ─── Mall Shell (2560 wide, scrollable height) ─── */
-  body { overflow-x: auto; }
-  .mall-shell {
-    width: 2560px; min-height: 1600px;
-    background:
-      radial-gradient(ellipse 1400px 700px at 20% 0%, rgba(59, 130, 246, 0.10), transparent 60%),
-      radial-gradient(ellipse 1000px 600px at 90% 30%, rgba(94, 234, 212, 0.06), transparent 60%),
-      var(--color-bg-0);
-    position: relative;
+  /* ─── Tesla-style reset ─── */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; overflow: hidden;
+    font-family: "Inter", "Manrope", "Noto Sans SC", system-ui, sans-serif;
+    background: #000;
+    color: #f5f5f7;
+    -webkit-font-smoothing: antialiased;
+  }
+  html, body { width: 2560px; height: 1600px; }
+
+  /* ─── Shell: 5-zone fixed layout ─── */
+  .shell {
+    width: 2560px; height: 1600px;
+    display: grid;
+    grid-template-columns: 220px 1fr 320px;
+    grid-template-rows: 88px 1fr 88px;
+    grid-template-areas:
+      "top top top"
+      "rail main side"
+      "dock dock dock";
+    background: #0a0b0e;
+    color: #f5f5f7;
   }
 
-  /* ─── TopBar (sticky, 100px) ─── */
-  .mall-topbar {
-    position: sticky; top: 0; z-index: 100;
-    height: 100px;
-    display: grid; grid-template-columns: auto 1fr auto auto auto; align-items: center;
-    gap: var(--space-5);
-    padding: 0 48px;
-    background: rgba(10, 11, 14, 0.72);
-    backdrop-filter: blur(28px) saturate(180%);
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
-    border-bottom: 1px solid var(--color-border-subtle);
-  }
-  .mall-brand { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: var(--weight-bold); font-size: var(--font-lg); letter-spacing: -0.04em; }
-  .mall-brand-mark { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, var(--color-accent), var(--color-brand-500)); display: grid; place-items: center; color: #03171f; font-weight: var(--weight-bold); font-size: var(--font-lg); box-shadow: var(--glow-accent); }
-  .mall-brand small { color: var(--color-text-muted); font-size: var(--font-xs); font-family: var(--font-sans); font-weight: var(--weight-regular); margin-left: 4px; letter-spacing: 0; }
+  /* SVG icon defaults */
+  .ic { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .ic-lg { width: 32px; height: 32px; stroke-width: 1.5; }
+  .ic-xl { width: 40px; height: 40px; stroke-width: 1.5; }
 
-  .mall-search {
-    height: 72px;
-    display: flex; align-items: center; gap: var(--space-3);
-    padding: 0 var(--space-5);
-    background: var(--color-bg-1);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-pill);
-    color: var(--color-text-muted);
-    max-width: 1080px;
-    transition: all var(--duration-base) var(--ease-out);
+  /* ─── TOP: system status bar ─── */
+  .top {
+    grid-area: top;
+    display: grid; grid-template-columns: auto 1fr auto auto auto auto; align-items: center;
+    gap: 48px;
+    padding: 0 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: #0a0b0e;
   }
-  .mall-search:hover { border-color: var(--color-border-strong); }
-  .mall-search .ic { font-size: 24px; }
-  .mall-search input { flex: 1; background: transparent; border: 0; outline: none; font-size: var(--font-sm); color: var(--color-text-primary); }
-  .mall-search input::placeholder { color: var(--color-text-muted); }
-  .mall-search .voice {
+  .top-time {
+    display: flex; align-items: baseline; gap: 16px;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+  .top-time .h {
+    font-size: 34px; font-weight: 500; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: #f5f5f7;
+  }
+  .top-time .d {
+    font-size: 18px; color: rgba(245,245,247,0.55); font-weight: 400;
+  }
+  .top-crumb {
+    color: rgba(245,245,247,0.55); font-size: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .top-crumb strong { color: #f5f5f7; font-weight: 500; }
+  .top-stat {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    color: rgba(245,245,247,0.75); font-size: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+  .top-stat .ic { color: rgba(245,245,247,0.55); }
+  .top-stat strong { color: #f5f5f7; font-weight: 500; }
+  .top-icon-btn {
     width: 56px; height: 56px;
-    border-radius: 50%;
-    background: rgba(94, 234, 212, 0.10);
-    border: 1px solid rgba(94, 234, 212, 0.30);
-    color: var(--color-mint);
     display: grid; place-items: center;
-    font-size: 22px;
-  }
-  .mall-search .voice:hover { background: rgba(94, 234, 212, 0.15); }
-
-  .mall-mode-toggle {
-    display: inline-flex; align-items: center; gap: var(--space-2);
-    padding: 0 var(--space-4); height: 56px;
-    background: rgba(94, 234, 212, 0.08);
-    border: 1px solid rgba(94, 234, 212, 0.25);
-    border-radius: var(--radius-pill);
-    color: var(--color-mint);
-    font-size: var(--font-xs); font-weight: var(--weight-semibold);
-  }
-  .mall-mode-toggle .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-mint); box-shadow: 0 0 8px var(--color-mint); }
-
-  .mall-cart-btn {
-    position: relative;
-    width: 88px; height: 88px;
-    border-radius: var(--radius-md);
-    background: var(--color-bg-1);
-    border: 1px solid var(--color-border-default);
-    display: grid; place-items: center;
-    color: var(--color-text-secondary);
-    font-size: 32px;
+    border-radius: 8px;
+    color: rgba(245,245,247,0.75);
     cursor: pointer;
-    transition: all var(--duration-fast) var(--ease-out);
+    transition: background 0.15s ease;
   }
-  .mall-cart-btn:hover { background: var(--color-bg-2); color: var(--color-text-primary); }
-  .mall-cart-btn .badge {
-    position: absolute; top: 12px; right: 12px;
-    min-width: 26px; height: 26px; padding: 0 7px;
-    background: var(--color-error); color: #fff;
-    border-radius: var(--radius-pill);
-    font-size: var(--font-xs); font-weight: var(--weight-bold);
-    display: grid; place-items: center;
-    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
-    box-shadow: 0 0 0 2px var(--color-bg-0);
-  }
-
-  .mall-user {
-    width: 72px; height: 72px;
+  .top-icon-btn:active { background: rgba(255,255,255,0.06); }
+  .top-avatar {
+    width: 48px; height: 48px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent));
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: #fff;
     display: grid; place-items: center;
-    color: #fff; font-weight: var(--weight-bold); font-size: var(--font-sm);
+    font-size: 18px; font-weight: 600;
+    font-family: "Inter", sans-serif;
   }
 
-  /* ─── Hero Section ─── */
-  .hero {
-    position: relative;
-    margin: 32px 40px 0;
-    height: 520px;
-    border-radius: 32px;
+  /* ─── LEFT RAIL: categories ─── */
+  .rail {
+    grid-area: rail;
+    background: #0a0b0e;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    padding: 24px 0;
     overflow: hidden;
-    background:
-      radial-gradient(ellipse 1200px 600px at 80% 50%, rgba(59, 130, 246, 0.35), transparent 60%),
-      radial-gradient(ellipse 800px 400px at 20% 30%, rgba(94, 234, 212, 0.20), transparent 60%),
-      linear-gradient(135deg, #0f1424, #0a0b14);
-    border: 1px solid var(--color-border-default);
-    box-shadow: 0 24px 64px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.06);
   }
-  .hero::before {
+  .rail-label {
+    padding: 0 24px 16px;
+    color: rgba(245,245,247,0.40); font-size: 18px;
+    font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .rail-item {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 18px 24px;
+    color: rgba(245,245,247,0.65);
+    font-size: 20px; font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.15s ease;
+  }
+  .rail-item:active { color: #f5f5f7; }
+  .rail-item .count {
+    color: rgba(245,245,247,0.35);
+    font-family: "JetBrains Mono", "Inter", monospace;
+    font-size: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+  .rail-item.active { color: #f5f5f7; }
+  .rail-item.active::before {
+    content: ""; position: absolute; left: 0; top: 14px; bottom: 14px;
+    width: 3px; background: #3b82f6;
+    border-radius: 0 2px 2px 0;
+  }
+  .rail-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 16px 24px; }
+
+  /* ─── MAIN: product grid ─── */
+  .main {
+    grid-area: main;
+    padding: 32px 40px;
+    overflow: hidden;
+  }
+  .main-head {
+    display: grid; grid-template-columns: 1fr auto; align-items: end;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .main-title {
+    font-size: 36px; font-weight: 600; letter-spacing: -0.02em;
+    color: #f5f5f7;
+  }
+  .main-sub {
+    color: rgba(245,245,247,0.50); font-size: 18px; margin-top: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .main-sort {
+    display: flex; gap: 4px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .main-sort button {
+    background: transparent; border: 0;
+    padding: 12px 20px;
+    color: rgba(245,245,247,0.55); font-size: 18px; font-weight: 500;
+    border-radius: 8px; cursor: pointer;
+    font-family: inherit;
+  }
+  .main-sort button.active {
+    background: rgba(255,255,255,0.08);
+    color: #f5f5f7;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: #131418;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    display: grid; grid-template-rows: 280px 1fr;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .card:active { border-color: rgba(255,255,255,0.18); }
+  .card-img {
+    background: linear-gradient(160deg, #1a1c22 0%, #0e1014 100%);
+    display: grid; place-items: center;
+    font-size: 92px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .card-img .price-tag {
+    position: absolute; top: 16px; left: 16px;
+    padding: 6px 12px;
+    background: rgba(10,11,14,0.85);
+    border-radius: 6px;
+    color: rgba(245,245,247,0.85);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px; font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    backdrop-filter: blur(8px);
+  }
+  .card-body {
+    padding: 20px 20px 18px;
+    display: grid; grid-template-rows: 1fr auto;
+    gap: 12px;
+  }
+  .card-title {
+    color: #f5f5f7;
+    font-size: 20px; font-weight: 500; line-height: 1.35;
+    letter-spacing: -0.005em;
+  }
+  .card-meta {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .card-price {
+    font-family: "JetBrains Mono", "Inter", monospace;
+    font-size: 26px; font-weight: 600;
+    color: #f5f5f7;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .card-price .sym { color: rgba(245,245,247,0.40); font-size: 18px; font-weight: 400; margin-right: 2px; }
+  .card-add {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    display: grid; place-items: center;
+    color: rgba(245,245,247,0.75);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .card-add:active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+
+  /* ─── RIGHT SIDE: car context + cart ─── */
+  .side {
+    grid-area: side;
+    border-left: 1px solid rgba(255,255,255,0.06);
+    padding: 24px 28px;
+    display: grid; grid-template-rows: auto auto auto auto 1fr;
+    gap: 28px;
+    background: #0a0b0e;
+    overflow: hidden;
+  }
+  .side-block-label {
+    color: rgba(245,245,247,0.40); font-size: 16px;
+    font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .side-loc-name {
+    font-size: 22px; font-weight: 500;
+    color: #f5f5f7; line-height: 1.2;
+  }
+  .side-loc-sub {
+    color: rgba(245,245,247,0.50); font-size: 18px;
+    margin-top: 4px;
+  }
+  .side-loc-map {
+    margin-top: 16px;
+    height: 90px; border-radius: 8px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(59,130,246,0.3) 0, transparent 12px),
+      linear-gradient(180deg, #0e1118 0%, #1a1d24 100%);
+    border: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .side-loc-map::before {
     content: ""; position: absolute; inset: 0;
     background-image:
-      radial-gradient(circle at 15% 85%, rgba(94, 234, 212, 0.30) 2px, transparent 3px),
-      radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
-      radial-gradient(circle at 70% 70%, rgba(96, 165, 250, 0.25) 2px, transparent 3px),
-      radial-gradient(circle at 90% 15%, rgba(255, 255, 255, 0.10) 1px, transparent 2px);
-    background-size: 200px 200px, 320px 320px, 280px 280px, 240px 240px;
-    pointer-events: none;
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
-  .hero-content { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: 100%; padding: 64px 80px; align-items: center; gap: 64px; z-index: 1; }
-  .hero-text { display: flex; flex-direction: column; gap: var(--space-5); }
-  .hero-eyebrow { display: inline-flex; align-items: center; gap: var(--space-2); padding: 6px 14px; background: rgba(94, 234, 212, 0.12); border: 1px solid rgba(94, 234, 212, 0.30); border-radius: var(--radius-pill); color: var(--color-mint); font-size: var(--font-xs); font-weight: var(--weight-semibold); width: max-content; }
-  .hero-title { font-family: var(--font-display); font-size: 80px; font-weight: var(--weight-bold); letter-spacing: -0.04em; line-height: 1.05; color: var(--color-text-primary); }
-  .hero-title .gradient { background: linear-gradient(135deg, var(--color-mint), var(--color-accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
-  .hero-sub { font-size: var(--font-lg); line-height: 1.5; color: var(--color-text-secondary); max-width: 880px; }
-  .hero-cta-row { display: flex; gap: var(--space-4); margin-top: var(--space-4); }
-  .hero-cta {
-    height: 112px; padding: 0 var(--space-7);
-    display: inline-flex; align-items: center; gap: var(--space-3);
-    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent));
-    color: #fff;
-    border-radius: var(--radius-pill);
-    font-size: var(--font-lg); font-weight: var(--weight-bold);
-    border: 0; cursor: pointer;
-    box-shadow: 0 16px 40px rgba(59, 130, 246, 0.45);
-    transition: transform var(--duration-fast) var(--ease-out);
+  .side-loc-map::after {
+    content: ""; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 14px; height: 14px;
+    background: #3b82f6; border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.20);
   }
-  .hero-cta:hover { transform: translateY(-2px); }
-  .hero-cta.secondary {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid var(--color-border-default);
-    color: var(--color-text-primary);
-    box-shadow: none;
-  }
-  .hero-visual {
-    position: relative; height: 100%;
-    display: grid; place-items: center;
-  }
-  .hero-card-stack { position: relative; width: 100%; height: 100%; }
-  .hero-floating-card {
-    position: absolute;
-    background: rgba(20, 22, 26, 0.65);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-lg);
-    padding: var(--space-5);
-    box-shadow: 0 24px 48px rgba(0,0,0,0.4);
-  }
-  .hero-floating-card.card-1 { top: 8%; left: 12%; width: 320px; transform: rotate(-3deg); }
-  .hero-floating-card.card-2 { top: 30%; right: 8%; width: 360px; transform: rotate(2deg); }
-  .hero-floating-card.card-3 { bottom: 10%; left: 30%; width: 380px; transform: rotate(-1deg); }
-  .hero-floating-card .ic { font-size: 48px; margin-bottom: var(--space-3); }
-  .hero-floating-card .title { color: var(--color-text-primary); font-size: var(--font-base); font-weight: var(--weight-semibold); margin-bottom: 4px; }
-  .hero-floating-card .meta { color: var(--color-text-muted); font-size: var(--font-xs); }
-  .hero-floating-card .price { color: var(--color-mint); font-family: var(--font-mono); font-size: var(--font-lg); font-weight: var(--weight-bold); margin-top: var(--space-3); }
 
-  /* ─── Section header ─── */
-  .section {
-    padding: 64px 40px 0;
+  .side-vehicle {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 16px;
   }
-  .section-head {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    margin-bottom: var(--space-5);
+  .v-stat {
+    padding: 10px 0;
   }
-  .section-title { font-family: var(--font-display); font-size: var(--font-2xl); font-weight: var(--weight-bold); letter-spacing: -0.03em; }
-  .section-sub { color: var(--color-text-muted); font-size: var(--font-sm); margin-top: 4px; }
-  .section-link {
-    color: var(--color-text-secondary); font-size: var(--font-sm); font-weight: var(--weight-medium);
-    padding: var(--space-3) var(--space-4); border-radius: var(--radius-pill);
-    border: 1px solid var(--color-border-subtle);
-    background: var(--color-bg-1);
-    display: inline-flex; align-items: center; gap: 6px;
+  .v-stat .l { color: rgba(245,245,247,0.45); font-size: 16px; margin-bottom: 6px; }
+  .v-stat .v {
+    color: #f5f5f7; font-family: "JetBrains Mono", "Inter", monospace;
+    font-size: 26px; font-weight: 500; letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
   }
-  .section-link:hover { color: var(--color-text-primary); border-color: var(--color-border-default); }
+  .v-stat .v .u { color: rgba(245,245,247,0.40); font-size: 18px; font-weight: 400; margin-left: 3px; }
 
-  /* ─── Categories ─── */
-  .cat-grid {
-    display: grid; grid-template-columns: repeat(8, 1fr);
-    gap: var(--space-5);
+  .cart-summary {
+    padding: 20px;
+    background: #131418;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
   }
-  .cat-tile {
-    aspect-ratio: 1 / 1;
-    background: var(--color-bg-1);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-xl);
-    display: grid; grid-template-rows: 1fr auto; padding: var(--space-5);
+  .cart-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 16px;
+  }
+  .cart-row .l { color: rgba(245,245,247,0.55); font-size: 18px; }
+  .cart-row .v {
+    color: #f5f5f7; font-family: "JetBrains Mono", monospace;
+    font-size: 28px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .cart-row .v .sym { color: rgba(245,245,247,0.40); font-size: 18px; font-weight: 400; margin-right: 2px; }
+  .cart-btn {
+    width: 100%; height: 64px;
+    background: #3b82f6;
+    color: #fff; border: 0;
+    border-radius: 10px;
+    font-size: 20px; font-weight: 600;
     cursor: pointer;
-    transition: all var(--duration-base) var(--ease-out);
-    position: relative; overflow: hidden;
+    font-family: inherit;
+    transition: background 0.15s ease;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
   }
-  .cat-tile::before {
-    content: ""; position: absolute; inset: 0;
-    opacity: 0;
-    background: linear-gradient(135deg, var(--bg-tint, transparent), transparent 60%);
-    transition: opacity var(--duration-base);
+  .cart-btn:active { background: #1d4ed8; }
+  .cart-btn-secondary {
+    background: transparent; color: #f5f5f7;
+    border: 1px solid rgba(255,255,255,0.12);
+    margin-top: 12px;
   }
-  .cat-tile:hover { transform: translateY(-4px); border-color: var(--color-border-strong); }
-  .cat-tile:hover::before { opacity: 1; }
-  .cat-tile .ic { display: grid; place-items: center; font-size: 72px; line-height: 1; position: relative; z-index: 1; }
-  .cat-tile .label { font-size: var(--font-base); font-weight: var(--weight-semibold); color: var(--color-text-primary); text-align: center; position: relative; z-index: 1; }
-  .cat-tile .count { color: var(--color-text-muted); font-size: var(--font-xs); font-family: var(--font-mono); text-align: center; position: relative; z-index: 1; margin-top: 4px; }
 
-  .cat-tile.tint-blue { --bg-tint: rgba(59, 130, 246, 0.20); }
-  .cat-tile.tint-mint { --bg-tint: rgba(94, 234, 212, 0.18); }
-  .cat-tile.tint-amber { --bg-tint: rgba(245, 158, 11, 0.18); }
-  .cat-tile.tint-rose { --bg-tint: rgba(236, 72, 153, 0.18); }
-  .cat-tile.tint-violet { --bg-tint: rgba(168, 85, 247, 0.20); }
-  .cat-tile.tint-cyan { --bg-tint: rgba(6, 182, 212, 0.20); }
-  .cat-tile.tint-emerald { --bg-tint: rgba(16, 185, 129, 0.18); }
-  .cat-tile.tint-orange { --bg-tint: rgba(251, 146, 60, 0.20); }
-
-  /* ─── Re-buy strip ─── */
-  .rebuy-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-5);
+  .pickup {
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
   }
-  .rebuy-card {
-    background: var(--color-bg-1);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-xl);
-    padding: var(--space-5);
-    display: grid; grid-template-columns: 200px 1fr; gap: var(--space-5); align-items: center;
+  .pickup-name {
+    color: #f5f5f7; font-size: 18px; font-weight: 500;
+  }
+  .pickup-meta {
+    color: rgba(245,245,247,0.50); font-size: 16px; margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .pickup-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 8px rgba(52,211,153,0.6);
+  }
+
+  /* ─── DOCK ─── */
+  .dock {
+    grid-area: dock;
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+    padding: 0 32px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    background: #0a0b0e;
+  }
+  .dock-tabs { display: flex; gap: 4px; }
+  .dock-tab {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px;
+    color: rgba(245,245,247,0.55);
+    background: transparent; border: 0;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all var(--duration-base) var(--ease-out);
+    font-size: 19px; font-weight: 500;
+    font-family: inherit;
   }
-  .rebuy-card:hover { border-color: var(--color-border-strong); transform: translateY(-2px); }
-  .rebuy-image {
-    width: 200px; height: 200px;
-    border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, var(--color-bg-2), var(--color-bg-3));
-    display: grid; place-items: center;
-    font-size: 80px;
-    border: 1px solid var(--color-border-subtle);
+  .dock-tab.active {
+    color: #f5f5f7;
+    background: rgba(255,255,255,0.06);
   }
-  .rebuy-info { display: flex; flex-direction: column; gap: var(--space-2); }
-  .rebuy-title { font-size: var(--font-base); font-weight: var(--weight-semibold); color: var(--color-text-primary); line-height: 1.3; }
-  .rebuy-meta { color: var(--color-text-muted); font-size: var(--font-xs); }
-  .rebuy-meta strong { color: var(--color-text-secondary); }
-  .rebuy-price { font-family: var(--font-mono); font-size: var(--font-lg); font-weight: var(--weight-bold); color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
-  .rebuy-price .symbol { color: var(--color-text-muted); font-size: var(--font-sm); margin-right: 2px; }
-  .rebuy-cta {
-    margin-top: var(--space-2);
-    height: 88px;
-    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent));
-    color: #fff;
-    border-radius: var(--radius-md);
-    border: 0; cursor: pointer;
-    font-size: var(--font-base); font-weight: var(--weight-bold);
-    display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
-  }
-
-  /* ─── Flash sale ─── */
-  .flash-bar {
-    background: linear-gradient(135deg, rgba(251, 146, 60, 0.10), rgba(239, 68, 68, 0.05));
-    border: 1px solid rgba(251, 146, 60, 0.25);
-    border-radius: var(--radius-xl);
-    padding: var(--space-5) var(--space-6);
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: var(--space-5);
-  }
-  .flash-title { display: flex; align-items: center; gap: var(--space-3); font-size: var(--font-xl); font-weight: var(--weight-bold); }
-  .flash-title .ic { font-size: 32px; }
-  .flash-title small { color: var(--color-text-muted); font-size: var(--font-xs); font-weight: var(--weight-regular); margin-left: var(--space-3); }
-  .flash-countdown {
-    display: inline-flex; align-items: center; gap: var(--space-2);
-    color: var(--color-text-secondary); font-size: var(--font-sm);
-  }
-  .flash-countdown .seg {
-    background: var(--color-bg-0); border: 1px solid var(--color-border-default);
-    padding: 8px 12px; min-width: 60px;
-    border-radius: var(--radius-sm);
-    font-family: var(--font-mono); font-size: var(--font-xl); font-weight: var(--weight-bold);
-    color: #FB923C; text-align: center; font-variant-numeric: tabular-nums;
-  }
-  .flash-grid {
-    display: grid; grid-template-columns: repeat(6, 1fr);
-    gap: var(--space-4);
-  }
-  .flash-card {
-    background: var(--color-bg-1);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    transition: all var(--duration-base) var(--ease-out);
-    cursor: pointer;
-    position: relative;
-  }
-  .flash-card:hover { border-color: var(--color-border-strong); transform: translateY(-2px); }
-  .flash-image {
-    aspect-ratio: 1 / 1;
-    background: linear-gradient(135deg, var(--color-bg-2), var(--color-bg-3));
-    display: grid; place-items: center;
-    font-size: 88px;
-    border-bottom: 1px solid var(--color-border-subtle);
-    position: relative;
-  }
-  .flash-badge {
-    position: absolute; top: 12px; left: 12px;
-    background: var(--color-error); color: #fff;
-    padding: 4px 10px;
-    border-radius: var(--radius-sm);
-    font-size: var(--font-xs); font-weight: var(--weight-bold); font-family: var(--font-mono);
-  }
-  .flash-info { padding: var(--space-4); display: flex; flex-direction: column; gap: 6px; }
-  .flash-title-s { font-size: var(--font-sm); color: var(--color-text-primary); font-weight: var(--weight-semibold); line-height: 1.3; }
-  .flash-price-row { display: flex; align-items: baseline; gap: var(--space-3); margin-top: 4px; }
-  .flash-price { color: var(--color-error); font-family: var(--font-mono); font-size: var(--font-xl); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
-  .flash-original { color: var(--color-text-muted); font-size: var(--font-xs); text-decoration: line-through; }
-
-  /* ─── Feed grid ─── */
-  .feed-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-5);
-  }
-  .feed-card {
-    background: var(--color-bg-1);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    cursor: pointer;
-    transition: all var(--duration-base) var(--ease-out);
-    display: flex; flex-direction: column;
-  }
-  .feed-card:hover { border-color: var(--color-border-strong); transform: translateY(-2px); }
-  .feed-image {
-    aspect-ratio: 1 / 1;
-    background: linear-gradient(135deg, var(--color-bg-2), var(--color-bg-3));
-    display: grid; place-items: center;
-    font-size: 110px;
-    position: relative;
-    border-bottom: 1px solid var(--color-border-subtle);
-  }
-  .feed-tag {
-    position: absolute; top: 16px; left: 16px;
-    padding: 4px 10px; border-radius: var(--radius-sm);
-    font-size: var(--font-xs); font-weight: var(--weight-semibold); font-family: var(--font-mono);
-  }
-  .feed-tag.new { background: rgba(94, 234, 212, 0.15); border: 1px solid rgba(94, 234, 212, 0.30); color: var(--color-mint); }
-  .feed-tag.hot { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.30); color: var(--color-error); }
-  .feed-info { padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: 6px; }
-  .feed-title { font-size: var(--font-base); color: var(--color-text-primary); font-weight: var(--weight-semibold); line-height: 1.3; }
-  .feed-meta { color: var(--color-text-muted); font-size: var(--font-xs); display: flex; gap: var(--space-3); align-items: center; }
-  .feed-meta .star { color: var(--color-warn); }
-  .feed-price-row { display: flex; align-items: baseline; justify-content: space-between; margin-top: var(--space-3); }
-  .feed-price { color: var(--color-text-primary); font-family: var(--font-mono); font-size: var(--font-xl); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
-  .feed-price .symbol { color: var(--color-text-muted); font-size: var(--font-sm); margin-right: 2px; }
-  .feed-add {
-    width: 56px; height: 56px;
+  .dock-mic {
+    width: 64px; height: 64px;
     border-radius: 50%;
-    background: var(--color-bg-2);
-    border: 1px solid var(--color-border-default);
-    color: var(--color-text-primary);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
     display: grid; place-items: center;
-    font-size: 22px; cursor: pointer;
+    color: #f5f5f7;
+    cursor: pointer;
+    margin: 0 auto;
+    transition: all 0.15s ease;
   }
-  .feed-add:hover { background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent)); color: #fff; border-color: transparent; }
-
-  /* ─── Footer ─── */
-  .mall-footer {
-    margin-top: 80px;
-    padding: 48px 40px 64px;
-    border-top: 1px solid var(--color-border-subtle);
-    display: grid; grid-template-columns: 1fr auto; align-items: center;
-    color: var(--color-text-muted); font-size: var(--font-xs);
+  .dock-mic:active {
+    background: #3b82f6; border-color: #3b82f6; color: #fff;
   }
-  .footer-note { display: flex; gap: var(--space-4); }
-  .footer-link {
-    color: var(--color-text-secondary);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border-subtle);
+  .dock-mic .ic { width: 28px; height: 28px; stroke-width: 1.75; }
+  .dock-right { display: flex; gap: 16px; align-items: center; }
+  .dock-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: rgba(245,245,247,0.65); font-size: 18px; font-weight: 500;
+    padding: 12px 16px; border-radius: 10px;
+    text-decoration: none;
+    transition: color 0.15s ease;
   }
-
-  /* ─── Bottom dock back to ivi-home ─── */
-  .back-to-ivi {
-    position: fixed; bottom: 32px; left: 32px;
-    height: 88px; padding: 0 var(--space-5);
-    background: rgba(20, 22, 26, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-pill);
-    color: var(--color-text-primary);
-    display: inline-flex; align-items: center; gap: var(--space-3);
-    font-size: var(--font-sm); font-weight: var(--weight-semibold);
-    box-shadow: 0 16px 32px rgba(0,0,0,0.3);
-    z-index: 80;
-  }
-
-  .build-tag {
-    position: fixed; bottom: 32px; right: 32px;
-    padding: 8px 14px;
-    background: rgba(20, 22, 26, 0.85);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-pill);
-    color: var(--color-text-muted);
-    font-size: var(--font-xs); font-family: var(--font-mono);
-    z-index: 80;
-  }
+  .dock-back:active { color: #f5f5f7; background: rgba(255,255,255,0.06); }
 </style>
 </head>
 <body>
+<div class="shell">
 
-<div class="mall-shell">
-
-  <!-- ═══════════════ Top Bar ═══════════════ -->
-  <header class="mall-topbar">
-    <a class="mall-brand" href="home.html">
-      <div class="mall-brand-mark">JD</div>
-      <span>车机商城</span>
-      <small>JDO Mall</small>
-    </a>
-
-    <div class="mall-search">
-      <span class="ic">🔍</span>
-      <input placeholder="搜你想要的，比如「玻璃水」「车充」「香薰」…">
-      <button class="voice" title="语音搜索">🎙</button>
+  <!-- ════════ TOP system bar (88px) ════════ -->
+  <header class="top">
+    <div class="top-time">
+      <span class="h">14:32</span>
+      <span class="d">周二 · 5月26</span>
     </div>
 
-    <div class="mall-mode-toggle">
-      <span class="dot"></span>
-      <span>停车态 · 完整体验</span>
+    <div class="top-crumb">
+      商城<span style="opacity:0.4">·</span><strong>全部商品</strong>
     </div>
 
-    <a class="mall-cart-btn" href="cart.html" title="购物车">
-      🛒
-      <span class="badge">3</span>
-    </a>
+    <div class="top-stat">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 12h12M4 12l4-4M4 12l4 4M16 6h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2"/></svg>
+      <strong>380</strong>km
+    </div>
 
-    <div class="mall-user">戴</div>
+    <div class="top-stat">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg>
+      <strong>22°</strong><span style="opacity:0.4">/</span><strong>23°</strong>
+    </div>
+
+    <button class="top-icon-btn" title="语音">
+      <svg class="ic-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+    </button>
+
+    <div class="top-avatar">戴</div>
   </header>
 
-  <!-- ═══════════════ Hero ═══════════════ -->
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-text">
-        <span class="hero-eyebrow">✨ 全场景车主优选 · Demo 演示版</span>
-        <h1 class="hero-title">
-          上车这段时间<br>
-          <span class="gradient">也能顺手买点东西</span>
-        </h1>
-        <p class="hero-sub">
-          玻璃水、车充、香薰…通勤碎片化时间内一键复购，下单后顺路自提，免下车。
-          检测到行车态自动切到「再买一次」简化界面，符合 NHTSA / AAOS 安全规范。
-        </p>
-        <div class="hero-cta-row">
-          <button class="hero-cta">立即体验主链路 →</button>
-          <a class="hero-cta secondary" href="driving-home.html">🚗 看行车态降级</a>
-        </div>
-      </div>
+  <!-- ════════ LEFT RAIL: categories ════════ -->
+  <aside class="rail">
+    <div class="rail-label">分类</div>
 
-      <div class="hero-visual">
-        <div class="hero-card-stack">
-          <div class="hero-floating-card card-1">
-            <div class="ic">💧</div>
-            <div class="title">玻璃水 -25℃</div>
-            <div class="meta">上次下单 · 3 天前</div>
-            <div class="price">¥39 × 4</div>
-          </div>
-          <div class="hero-floating-card card-2">
-            <div class="ic">🔌</div>
-            <div class="title">小米车载充电器</div>
-            <div class="meta">120W · 双口快充</div>
-            <div class="price">¥129</div>
-          </div>
-          <div class="hero-floating-card card-3">
-            <div class="ic">🌸</div>
-            <div class="title">观夜车载香氛</div>
-            <div class="meta">柏木 · 持续 60 天</div>
-            <div class="price">¥89</div>
-          </div>
-        </div>
-      </div>
+    <div class="rail-item active">
+      <span>全部商品</span>
+      <span class="count">1.2k</span>
     </div>
-  </section>
+    <div class="rail-item">
+      <span>车充电源</span>
+      <span class="count">324</span>
+    </div>
+    <div class="rail-item">
+      <span>车载香氛</span>
+      <span class="count">86</span>
+    </div>
+    <div class="rail-item">
+      <span>清洁养护</span>
+      <span class="count">247</span>
+    </div>
+    <div class="rail-item">
+      <span>座椅靠垫</span>
+      <span class="count">54</span>
+    </div>
+    <div class="rail-item">
+      <span>车饰内饰</span>
+      <span class="count">189</span>
+    </div>
+    <div class="rail-item">
+      <span>车载娱乐</span>
+      <span class="count">47</span>
+    </div>
+    <div class="rail-item">
+      <span>应急工具</span>
+      <span class="count">28</span>
+    </div>
 
-  <!-- ═══════════════ Categories ═══════════════ -->
-  <section class="section">
-    <div class="section-head">
+    <div class="rail-divider"></div>
+
+    <div class="rail-item">
+      <span>路途零食</span>
+      <span class="count">156</span>
+    </div>
+    <div class="rail-item">
+      <span>家居生活</span>
+      <span class="count">93</span>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN: product grid ════════ -->
+  <main class="main">
+    <div class="main-head">
       <div>
-        <h2 class="section-title">逛分类</h2>
-        <div class="section-sub">全品类入口 · 横屏 8 列大卡布局</div>
+        <div class="main-title">全部商品</div>
+        <div class="main-sub">1,234 件 · 横屏 4 列 · 当前页 1 / 8</div>
       </div>
-      <a class="section-link" href="category.html">全部分类 →</a>
-    </div>
-
-    <div class="cat-grid">
-      <a class="cat-tile tint-cyan" href="category.html">
-        <div class="ic">⚡</div>
-        <div class="label">车充电源</div>
-        <div class="count">1.2k+ 商品</div>
-      </a>
-      <a class="cat-tile tint-amber" href="category.html">
-        <div class="ic">🌸</div>
-        <div class="label">车载香氛</div>
-        <div class="count">680+ 商品</div>
-      </a>
-      <a class="cat-tile tint-blue" href="category.html">
-        <div class="ic">💧</div>
-        <div class="label">清洁养护</div>
-        <div class="count">2.4k+ 商品</div>
-      </a>
-      <a class="cat-tile tint-violet" href="category.html">
-        <div class="ic">🪑</div>
-        <div class="label">座椅靠垫</div>
-        <div class="count">920+ 商品</div>
-      </a>
-      <a class="cat-tile tint-emerald" href="category.html">
-        <div class="ic">🚗</div>
-        <div class="label">车饰内饰</div>
-        <div class="count">1.6k+ 商品</div>
-      </a>
-      <a class="cat-tile tint-rose" href="category.html">
-        <div class="ic">🎵</div>
-        <div class="label">车载娱乐</div>
-        <div class="count">540+ 商品</div>
-      </a>
-      <a class="cat-tile tint-orange" href="category.html">
-        <div class="ic">🛠</div>
-        <div class="label">应急工具</div>
-        <div class="count">320+ 商品</div>
-      </a>
-      <a class="cat-tile tint-mint" href="category.html">
-        <div class="ic">🍱</div>
-        <div class="label">路途零食</div>
-        <div class="count">2.1k+ 商品</div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ═══════════════ Re-buy ═══════════════ -->
-  <section class="section">
-    <div class="section-head">
-      <div>
-        <h2 class="section-title">再买一次</h2>
-        <div class="section-sub">从你的历史订单 · 一键续单 · 行车态主推</div>
-      </div>
-      <a class="section-link" href="orders.html">查看历史订单 →</a>
-    </div>
-
-    <div class="rebuy-grid">
-      <a class="rebuy-card" href="product-detail.html">
-        <div class="rebuy-image">💧</div>
-        <div class="rebuy-info">
-          <div class="rebuy-title">蓝月星 · 玻璃水 -25℃</div>
-          <div class="rebuy-meta">上次下单 · <strong>3 天前</strong> · 4 瓶装</div>
-          <div class="rebuy-price"><span class="symbol">¥</span>39</div>
-          <button class="rebuy-cta">⚡ 立即下单</button>
-        </div>
-      </a>
-      <a class="rebuy-card" href="product-detail.html">
-        <div class="rebuy-image">🔌</div>
-        <div class="rebuy-info">
-          <div class="rebuy-title">小米 · 车载充电器 120W</div>
-          <div class="rebuy-meta">上次下单 · <strong>14 天前</strong></div>
-          <div class="rebuy-price"><span class="symbol">¥</span>129</div>
-          <button class="rebuy-cta">⚡ 立即下单</button>
-        </div>
-      </a>
-      <a class="rebuy-card" href="product-detail.html">
-        <div class="rebuy-image">🌸</div>
-        <div class="rebuy-info">
-          <div class="rebuy-title">观夜 · 车载固体香氛</div>
-          <div class="rebuy-meta">上次下单 · <strong>26 天前</strong> · 周期补货</div>
-          <div class="rebuy-price"><span class="symbol">¥</span>89</div>
-          <button class="rebuy-cta">⚡ 立即下单</button>
-        </div>
-      </a>
-      <a class="rebuy-card" href="product-detail.html">
-        <div class="rebuy-image">🌀</div>
-        <div class="rebuy-info">
-          <div class="rebuy-title">追觅 · 车载无线吸尘器</div>
-          <div class="rebuy-meta">上次下单 · <strong>40 天前</strong> · 滤网</div>
-          <div class="rebuy-price"><span class="symbol">¥</span>59</div>
-          <button class="rebuy-cta">⚡ 立即下单</button>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ═══════════════ Flash sale ═══════════════ -->
-  <section class="section">
-    <div class="section-head">
-      <div>
-        <h2 class="section-title">限时秒杀</h2>
-        <div class="section-sub">每日 14:00 / 20:00 限时供应 · 售完即止</div>
-      </div>
-      <a class="section-link" href="category.html">看全部 →</a>
-    </div>
-
-    <div class="flash-bar">
-      <div class="flash-title">
-        <span class="ic">🔥</span>
-        正在抢购
-        <small>下一场 20:00</small>
-      </div>
-      <div class="flash-countdown">
-        距结束还剩
-        <span class="seg">02</span>
-        <span>:</span>
-        <span class="seg">14</span>
-        <span>:</span>
-        <span class="seg">37</span>
+      <div class="main-sort">
+        <button class="active">综合</button>
+        <button>销量</button>
+        <button>价格</button>
+        <button>新品</button>
       </div>
     </div>
 
-    <div class="flash-grid">
-      <div class="flash-card">
-        <div class="flash-image">
-          <span class="flash-badge">-40%</span>
-          🔋
-        </div>
-        <div class="flash-info">
-          <div class="flash-title-s">公牛 USB-C 65W 车充</div>
-          <div class="flash-price-row">
-            <span class="flash-price"><span class="symbol">¥</span>59</span>
-            <span class="flash-original">¥99</span>
+    <div class="grid">
+      <div class="card">
+        <div class="card-img">💧<span class="price-tag">¥39</span></div>
+        <div class="card-body">
+          <div class="card-title">蓝月星 玻璃水 -25℃ 防冻 4 瓶装</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>39</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>
       </div>
 
-      <div class="flash-card">
-        <div class="flash-image">
-          <span class="flash-badge">-35%</span>
-          💨
-        </div>
-        <div class="flash-info">
-          <div class="flash-title-s">车载除味 · 空气清新喷雾</div>
-          <div class="flash-price-row">
-            <span class="flash-price"><span class="symbol">¥</span>19</span>
-            <span class="flash-original">¥29</span>
+      <div class="card">
+        <div class="card-img">🔌<span class="price-tag">¥129</span></div>
+        <div class="card-body">
+          <div class="card-title">小米 车载充电器 120W 双 USB-C 快充</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>129</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>
       </div>
 
-      <div class="flash-card">
-        <div class="flash-image">
-          <span class="flash-badge">-30%</span>
-          🪑
-        </div>
-        <div class="flash-info">
-          <div class="flash-title-s">承塘慢回弹车载头枕</div>
-          <div class="flash-price-row">
-            <span class="flash-price"><span class="symbol">¥</span>49</span>
-            <span class="flash-original">¥69</span>
+      <div class="card">
+        <div class="card-img">🌸<span class="price-tag">¥89</span></div>
+        <div class="card-body">
+          <div class="card-title">观夜 车载固体香氛 柏木调 60 天</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>89</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>
       </div>
 
-      <div class="flash-card">
-        <div class="flash-image">
-          <span class="flash-badge">-25%</span>
-          🧯
-        </div>
-        <div class="flash-info">
-          <div class="flash-title-s">车载多功能安全锤</div>
-          <div class="flash-price-row">
-            <span class="flash-price"><span class="symbol">¥</span>22</span>
-            <span class="flash-original">¥29</span>
+      <div class="card">
+        <div class="card-img">🌀<span class="price-tag">¥299</span></div>
+        <div class="card-body">
+          <div class="card-title">追觅 车载无线吸尘器 Pro 18000Pa</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>299</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>
       </div>
 
-      <div class="flash-card">
-        <div class="flash-image">
-          <span class="flash-badge">-50%</span>
-          🥤
-        </div>
-        <div class="flash-info">
-          <div class="flash-title-s">膳魔师车载保温杯</div>
-          <div class="flash-price-row">
-            <span class="flash-price"><span class="symbol">¥</span>89</span>
-            <span class="flash-original">¥179</span>
+      <div class="card">
+        <div class="card-img">📷<span class="price-tag">¥499</span></div>
+        <div class="card-body">
+          <div class="card-title">70 迈 4K 行车记录仪 双镜头</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>499</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>
       </div>
 
-      <div class="flash-card">
-        <div class="flash-image">
-          <span class="flash-badge">-20%</span>
-          🍪
+      <div class="card">
+        <div class="card-img">🪑<span class="price-tag">¥69</span></div>
+        <div class="card-body">
+          <div class="card-title">承塘 慢回弹车载头枕 颈椎支撑</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>69</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
         </div>
-        <div class="flash-info">
-          <div class="flash-title-s">三只松鼠 路途零食礼盒</div>
-          <div class="flash-price-row">
-            <span class="flash-price"><span class="symbol">¥</span>79</span>
-            <span class="flash-original">¥99</span>
+      </div>
+
+      <div class="card">
+        <div class="card-img">🥤<span class="price-tag">¥89</span></div>
+        <div class="card-body">
+          <div class="card-title">膳魔师 车载保温杯 350ml 12 小时</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>89</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">🧯<span class="price-tag">¥22</span></div>
+        <div class="card-body">
+          <div class="card-title">车载多功能安全锤 应急破窗器</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>22</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">🎧<span class="price-tag">¥699</span></div>
+        <div class="card-body">
+          <div class="card-title">JBL 车载蓝牙音箱 Pro 防水版</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>699</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">🛞<span class="price-tag">¥189</span></div>
+        <div class="card-body">
+          <div class="card-title">米其林 自补胎液应急套装 双瓶</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>189</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">🧰<span class="price-tag">¥99</span></div>
+        <div class="card-body">
+          <div class="card-title">车载折叠工具箱 12 件套</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>99</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-img">🍫<span class="price-tag">¥59</span></div>
+        <div class="card-body">
+          <div class="card-title">士力架 车载能量条 24 支补充</div>
+          <div class="card-meta">
+            <span class="card-price"><span class="sym">¥</span>59</span>
+            <button class="card-add"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </main>
 
-  <!-- ═══════════════ Feed ═══════════════ -->
-  <section class="section">
-    <div class="section-head">
-      <div>
-        <h2 class="section-title">为你推荐</h2>
-        <div class="section-sub">基于你的浏览与下单记录 · 横屏 4 列瀑布流</div>
-      </div>
-      <a class="section-link" href="category.html">换一批 ↻</a>
+  <!-- ════════ RIGHT SIDE: car context ════════ -->
+  <aside class="side">
+
+    <div>
+      <div class="side-block-label">当前位置</div>
+      <div class="side-loc-name">P2-15 停车场</div>
+      <div class="side-loc-sub">北京 · 海淀区中关村</div>
+      <div class="side-loc-map"></div>
     </div>
 
-    <div class="feed-grid">
-      <div class="feed-card">
-        <div class="feed-image">
-          <span class="feed-tag new">NEW</span>
-          🛞
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">米其林 自补胎液应急套装</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.8</span>
-            <span>· 销 5.6k</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>189</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-card">
-        <div class="feed-image">
-          <span class="feed-tag hot">HOT</span>
-          📷
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">70 迈 4K 行车记录仪</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.9</span>
-            <span>· 销 12k</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>499</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-card">
-        <div class="feed-image">
-          🧴
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">3M 车漆养护快蜡套装</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.7</span>
-            <span>· 销 3.2k</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>149</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-card">
-        <div class="feed-image">
-          <span class="feed-tag new">NEW</span>
-          🎧
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">JBL 车载蓝牙音箱 Pro</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.6</span>
-            <span>· 销 890</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>699</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-card">
-        <div class="feed-image">
-          🧰
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">车载折叠工具箱 12 件套</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.5</span>
-            <span>· 销 4.1k</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>99</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-card">
-        <div class="feed-image">
-          <span class="feed-tag hot">HOT</span>
-          ☂
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">天堂车载折叠伞</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.8</span>
-            <span>· 销 8.7k</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>69</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-card">
-        <div class="feed-image">
-          🍫
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">士力架车载补充能量条 24 支</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.9</span>
-            <span>· 销 21k</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>59</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="feed-card">
-        <div class="feed-image">
-          🧊
-        </div>
-        <div class="feed-info">
-          <div class="feed-title">车载迷你冰箱 6L</div>
-          <div class="feed-meta">
-            <span><span class="star">★</span> 4.7</span>
-            <span>· 销 1.8k</span>
-          </div>
-          <div class="feed-price-row">
-            <span class="feed-price"><span class="symbol">¥</span>399</span>
-            <button class="feed-add">+</button>
-          </div>
-        </div>
+    <div>
+      <div class="side-block-label">车辆</div>
+      <div class="side-vehicle">
+        <div class="v-stat"><div class="l">续航</div><div class="v">380<span class="u">km</span></div></div>
+        <div class="v-stat"><div class="l">电量</div><div class="v">78<span class="u">%</span></div></div>
+        <div class="v-stat"><div class="l">主驾</div><div class="v">22<span class="u">°</span></div></div>
+        <div class="v-stat"><div class="l">副驾</div><div class="v">23<span class="u">°</span></div></div>
       </div>
     </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="mall-footer">
-    <div class="footer-note">
-      <span>JDO 车机商城 · Demo 演示版 · 2026-05-26</span>
+    <div class="cart-summary">
+      <div class="side-block-label" style="margin-bottom:8px">购物车</div>
+      <div class="cart-row">
+        <span class="l">3 件商品</span>
+        <span class="v"><span class="sym">¥</span>267</span>
+      </div>
+      <button class="cart-btn">去结算</button>
+      <button class="cart-btn cart-btn-secondary">查看明细</button>
     </div>
-    <div class="footer-note">
-      <a class="footer-link" href="../docs/PRD.md">PRD</a>
-      <a class="footer-link" href="../docs/design/design-system.md">Design System</a>
-      <a class="footer-link" href="../docs/feature-spec.md">Feature Spec</a>
+
+    <div>
+      <div class="side-block-label">附近自提</div>
+      <div class="pickup">
+        <div>
+          <div class="pickup-name">三里屯·便利店</div>
+          <div class="pickup-meta">150m · 8:00–22:00 · 营业中</div>
+        </div>
+        <div class="pickup-dot"></div>
+      </div>
     </div>
-  </footer>
+
+  </aside>
+
+  <!-- ════════ DOCK ════════ -->
+  <nav class="dock">
+    <div class="dock-tabs">
+      <button class="dock-tab active">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>
+        商城
+      </button>
+      <button class="dock-tab">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9M3 12V3h9"/></svg>
+        再买
+      </button>
+      <button class="dock-tab">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+        订单
+      </button>
+      <button class="dock-tab">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        收藏
+      </button>
+    </div>
+
+    <button class="dock-mic" title="语音助手">
+      <svg class="ic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+    </button>
+
+    <div class="dock-right">
+      <a class="dock-back" href="ivi-home.html">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        返回车机
+      </a>
+    </div>
+  </nav>
+
 </div>
-
-<a class="back-to-ivi" href="ivi-home.html">⬅ 返回车机主页</a>
-<div class="build-tag">商城首页 · 2560 × 1600 · /</div>
-
-<script src="styles/autofit.js"></script>
 </body>
 </html>
