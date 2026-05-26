@@ -22,13 +22,13 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 
 | 编号 | 标题 | 状态 | 日期 |
 |---|---|---|---|
+| [ADR-0001](./decisions/ADR-0001-frontend-framework.md) | 前端框架（React 18 + Vite + TypeScript） | Accepted | 2026-05-25 |
+| [ADR-0002](./decisions/ADR-0002-backend-runtime.md) | 后端运行时与框架（Node.js 20 + Fastify + zod） | Accepted | 2026-05-25 |
+| [ADR-0003](./decisions/ADR-0003-database-and-orm.md) | 数据库 + ORM（PostgreSQL 16 + Prisma 5 + Redis 7） | Accepted | 2026-05-25 |
+| [ADR-0004](./decisions/ADR-0004-driving-state-source.md) | 行车态车速数据源协议（URL 参数 mock + JS Bridge 抽象） | Accepted | 2026-05-25 |
+| [ADR-0005](./decisions/ADR-0005-deployment-strategy.md) | 部署方案（Vercel 前端 + Railway/Render 后端） | Accepted | 2026-05-25 |
 | [ADR-0006](./decisions/ADR-0006-monorepo-tool.md) | monorepo 工具选型（pnpm + Turborepo） | Accepted | 2026-05-25 |
-| ADR-0001 | 前端框架选型（React vs Vue vs SolidJS） | _Pending_ | — |
-| ADR-0002 | 后端运行时与框架（Node.js + Fastify/NestJS） | _Pending_ | — |
-| ADR-0003 | 数据库 + ORM（PostgreSQL + Prisma） | _Pending_ | — |
-| ADR-0004 | 行车态车速数据源协议 | _Pending_ | — |
-| ADR-0005 | 部署方案（Vercel + 云后端） | _Pending_ | — |
-| ADR-0007 | UI 库 / 设计系统起点 | _Pending_ | — |
+| [ADR-0007](./decisions/ADR-0007-ui-library-and-design-system.md) | UI 库 / 设计系统起点（自研 tokens + Tailwind + Radix Primitives） | Accepted | 2026-05-25 |
 
 > **依赖顺序**：ADR-0006 → 0001 / 0002 / 0003 → 0007 → 0004 → 0005。
 > 详见 PRD.md §起手 Coding 计划 / 开干前必须先定的 ADR。
