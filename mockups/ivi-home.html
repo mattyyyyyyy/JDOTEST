@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-mode="parked">
+<head>
+<meta charset="utf-8" />
+<title>车机首页 · 智能座舱 (2560×1600)</title>
+<meta name="viewport" content="width=2560">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/components.css">
+<style>
+  /* ─── IVI Shell (2560×1600) ─── */
+  body { overflow-x: auto; }
+  .ivi-shell {
+    width: 2560px; min-height: 1600px;
+    display: grid; grid-template-rows: 88px 1fr 128px;
+    background:
+      radial-gradient(ellipse 1200px 800px at 15% 0%, rgba(59, 130, 246, 0.10), transparent 60%),
+      radial-gradient(ellipse 900px 600px at 85% 100%, rgba(94, 234, 212, 0.06), transparent 60%),
+      var(--color-bg-0);
+    position: relative;
+  }
+  /* subtle noise overlay */
+  .ivi-shell::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(circle at 25% 30%, rgba(255,255,255,0.012) 1px, transparent 1px),
+      radial-gradient(circle at 75% 70%, rgba(255,255,255,0.008) 1px, transparent 1px);
+    background-size: 4px 4px, 6px 6px;
+    opacity: 0.7;
+  }
+
+  /* ─── Status Bar (88px) ─── */
+  .status-bar {
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    padding: 0 48px;
+    background: rgba(10, 11, 14, 0.5);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--color-border-subtle);
+    position: relative; z-index: 2;
+  }
+  .sb-left { display: flex; align-items: center; gap: var(--space-5); }
+  .sb-time {
+    font-family: var(--font-display);
+    font-size: var(--font-2xl); font-weight: var(--weight-bold);
+    letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
+    color: var(--color-text-primary);
+  }
+  .sb-meta { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
+  .sb-meta .date { color: var(--color-text-secondary); font-size: var(--font-xs); }
+  .sb-meta .weather { display: flex; align-items: center; gap: 6px; color: var(--color-text-muted); font-size: var(--font-xs); }
+  .sb-vehicle-tag {
+    display: inline-flex; align-items: center; gap: var(--space-3);
+    height: 56px; padding: 0 var(--space-5);
+    background: var(--color-bg-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-secondary);
+    font-size: var(--font-xs); font-weight: var(--weight-medium);
+  }
+  .sb-vehicle-tag .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-success); box-shadow: 0 0 8px var(--color-success); }
+  .sb-right { display: flex; gap: var(--space-4); align-items: center; justify-content: flex-end; }
+  .sb-chip {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    height: 56px; padding: 0 var(--space-4);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-secondary); font-size: var(--font-xs);
+  }
+  .sb-chip strong { color: var(--color-text-primary); font-weight: var(--weight-semibold); font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .sb-avatar { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent)); display: grid; place-items: center; color: #fff; font-weight: var(--weight-bold); }
+
+  /* ─── Main Grid ─── */
+  .ivi-main {
+    display: grid; grid-template-columns: 1280px 1fr; gap: 32px;
+    padding: 32px 40px;
+    position: relative; z-index: 1;
+  }
+
+  /* ─── Map Widget ─── */
+  .map-widget {
+    border-radius: var(--radius-xl);
+    position: relative; overflow: hidden;
+    background:
+      linear-gradient(180deg, #0d1320 0%, #0a0e1a 100%),
+      var(--color-bg-1);
+    border: 1px solid var(--color-border-default);
+    box-shadow: var(--shadow-glass);
+  }
+  /* fake map: grid lines + roads */
+  .map-canvas {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+  .map-canvas::before {
+    content: ""; position: absolute;
+    width: 1200px; height: 4px;
+    background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.30) 20%, var(--color-mint) 50%, rgba(94, 234, 212, 0.30) 80%, transparent);
+    top: 55%; left: 40px;
+    transform: rotate(-12deg); transform-origin: left center;
+    border-radius: 2px;
+    box-shadow: 0 0 24px rgba(94, 234, 212, 0.50);
+  }
+  .map-canvas::after {
+    content: ""; position: absolute;
+    width: 1200px; height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05), transparent);
+    top: 35%; left: 0;
+    transform: rotate(-8deg); transform-origin: left center;
+    border-radius: 2px;
+  }
+  /* current vehicle marker */
+  .vehicle-marker {
+    position: absolute; top: 58%; left: 28%;
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--color-mint);
+    box-shadow: 0 0 0 8px rgba(94, 234, 212, 0.20), 0 0 0 24px rgba(94, 234, 212, 0.08), 0 0 32px var(--color-mint);
+    display: grid; place-items: center;
+    color: #03171f; font-size: 24px; font-weight: 700;
+  }
+  .vehicle-marker::after {
+    content: ""; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    border: 12px solid transparent; border-bottom-color: var(--color-mint);
+    margin-bottom: -6px;
+  }
+  /* Map overlays */
+  .map-nav-card {
+    position: absolute; top: 32px; left: 32px;
+    width: 540px; padding: var(--space-5);
+    background: rgba(20, 22, 26, 0.75);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    display: grid; grid-template-columns: 88px 1fr; gap: var(--space-5); align-items: center;
+  }
+  .map-nav-card .ic {
+    width: 88px; height: 88px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent));
+    display: grid; place-items: center; color: #fff; font-size: 40px;
+  }
+  .map-nav-card .info { display: flex; flex-direction: column; gap: 4px; }
+  .map-nav-card .dest { font-size: var(--font-lg); font-weight: var(--weight-bold); color: var(--color-text-primary); }
+  .map-nav-card .stats { display: flex; gap: var(--space-4); align-items: center; color: var(--color-text-secondary); font-size: var(--font-xs); }
+  .map-nav-card .stats strong { color: var(--color-mint); font-family: var(--font-mono); font-size: var(--font-sm); font-variant-numeric: tabular-nums; }
+  .map-nav-card .stats .sep { color: var(--color-text-disabled); }
+
+  .map-traffic-card {
+    position: absolute; top: 32px; right: 32px;
+    padding: var(--space-3) var(--space-4);
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.30);
+    border-radius: var(--radius-pill);
+    color: var(--color-warn);
+    font-size: var(--font-xs); font-weight: var(--weight-semibold);
+    display: inline-flex; align-items: center; gap: var(--space-2);
+  }
+
+  .map-speed-pill {
+    position: absolute; bottom: 32px; left: 32px;
+    display: inline-flex; align-items: baseline; gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    background: rgba(10, 11, 14, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-primary);
+  }
+  .map-speed-pill .v { font-family: var(--font-mono); font-size: var(--font-2xl); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .map-speed-pill .u { color: var(--color-text-muted); font-size: var(--font-xs); font-weight: var(--weight-medium); }
+
+  .map-zoom {
+    position: absolute; bottom: 32px; right: 32px;
+    display: flex; flex-direction: column; gap: 2px;
+    background: rgba(10, 11, 14, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .map-zoom button {
+    width: 72px; height: 72px;
+    background: transparent; border: 0;
+    color: var(--color-text-secondary);
+    font-size: 32px; font-weight: 300;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+  .map-zoom button:hover { background: var(--color-bg-2); color: var(--color-text-primary); }
+  .map-zoom .sep { height: 1px; background: var(--color-border-subtle); }
+
+  /* ─── Right Pane ─── */
+  .right-pane { display: grid; grid-template-rows: 280px 1fr 320px; gap: 32px; }
+
+  /* ─── Vehicle Hero ─── */
+  .vehicle-hero {
+    padding: 32px 40px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(94, 234, 212, 0.04));
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-xl);
+    display: grid; grid-template-columns: auto 1fr; gap: var(--space-6); align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .vehicle-hero::before {
+    content: ""; position: absolute; right: -120px; top: -80px;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(94, 234, 212, 0.15), transparent 60%);
+    pointer-events: none;
+  }
+  .car-illustration {
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(94, 234, 212, 0.25), transparent 60%),
+      linear-gradient(135deg, var(--color-bg-2), var(--color-bg-1));
+    border: 2px solid var(--color-border-default);
+    display: grid; place-items: center;
+    font-size: 72px;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+    position: relative; z-index: 1;
+  }
+  .vehicle-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); position: relative; z-index: 1; }
+  .v-stat-label { color: var(--color-text-muted); font-size: var(--font-xs); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+  .v-stat-value { color: var(--color-text-primary); font-family: var(--font-mono); font-size: var(--font-xl); font-weight: var(--weight-bold); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .v-stat-value .unit { color: var(--color-text-muted); font-size: var(--font-sm); font-weight: var(--weight-regular); margin-left: 4px; }
+  .v-stat-bar { margin-top: var(--space-2); height: 6px; background: var(--color-bg-2); border-radius: var(--radius-pill); overflow: hidden; }
+  .v-stat-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--color-mint), var(--color-accent)); border-radius: var(--radius-pill); }
+
+  /* ─── Apps Grid ─── */
+  .apps-grid {
+    padding: 32px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-default);
+    background: var(--color-surface-glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4);
+    grid-auto-rows: 1fr;
+  }
+  .app-tile {
+    aspect-ratio: 1 / 1;
+    background: var(--color-bg-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    display: grid; grid-template-rows: 1fr auto; padding: var(--space-4);
+    cursor: pointer;
+    transition: all var(--duration-base) var(--ease-out);
+    position: relative;
+    overflow: hidden;
+    min-height: 88px;
+  }
+  .app-tile:hover { transform: translateY(-2px); border-color: var(--color-border-strong); background: var(--color-bg-2); }
+  .app-tile .ic { display: grid; place-items: center; font-size: 48px; }
+  .app-tile .label { font-size: var(--font-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); text-align: center; }
+  .app-tile.featured {
+    background: linear-gradient(135deg, rgba(94, 234, 212, 0.16), rgba(6, 182, 212, 0.08));
+    border-color: rgba(94, 234, 212, 0.50);
+    box-shadow: 0 0 0 1px rgba(94, 234, 212, 0.20), 0 16px 40px rgba(94, 234, 212, 0.20);
+  }
+  .app-tile.featured::after {
+    content: "NEW"; position: absolute; top: 12px; right: 12px;
+    padding: 4px 10px;
+    background: var(--color-mint); color: #03171f;
+    font-size: var(--font-xs); font-weight: var(--weight-bold);
+    border-radius: var(--radius-sm);
+    letter-spacing: 0.04em; font-family: var(--font-mono);
+  }
+  .app-tile.featured .label { color: var(--color-mint); }
+  .app-tile .dot {
+    position: absolute; top: 16px; right: 16px;
+    width: 14px; height: 14px;
+    border-radius: 50%; background: var(--color-error);
+    box-shadow: 0 0 0 2px var(--color-bg-1);
+  }
+
+  /* ─── Music Card ─── */
+  .music-card {
+    padding: 28px 32px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-default);
+    background: linear-gradient(135deg, rgba(214, 188, 138, 0.06), rgba(20, 22, 26, 0.6));
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    display: grid; grid-template-columns: 200px 1fr; gap: var(--space-5); align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .album-art {
+    width: 200px; height: 200px;
+    border-radius: var(--radius-lg);
+    background:
+      conic-gradient(from 220deg at 60% 40%, #2a1810, #4a2818, #6b3a20, #2a1810),
+      var(--color-gold);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.10);
+    position: relative;
+    display: grid; place-items: center;
+    color: rgba(255,255,255,0.85);
+    font-family: var(--font-display);
+    font-weight: var(--weight-bold);
+    font-size: var(--font-xl);
+    letter-spacing: -0.04em;
+  }
+  .album-art::after {
+    content: "";
+    position: absolute; bottom: 16px; right: 16px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+  .music-info { display: flex; flex-direction: column; gap: var(--space-3); }
+  .music-track { font-size: var(--font-lg); font-weight: var(--weight-bold); color: var(--color-text-primary); }
+  .music-artist { font-size: var(--font-sm); color: var(--color-text-muted); }
+  .music-progress {
+    height: 4px; background: var(--color-bg-2); border-radius: var(--radius-pill); position: relative; margin: var(--space-2) 0;
+  }
+  .music-progress::before {
+    content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 38%;
+    background: linear-gradient(90deg, var(--color-gold), #f1d9a8);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 12px rgba(214, 188, 138, 0.40);
+  }
+  .music-progress::after {
+    content: ""; position: absolute; left: 38%; top: 50%;
+    width: 14px; height: 14px; transform: translate(-50%, -50%);
+    background: #f1d9a8; border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(214, 188, 138, 0.25), 0 4px 8px rgba(0,0,0,0.4);
+  }
+  .music-time { display: flex; justify-content: space-between; color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--font-xs); font-variant-numeric: tabular-nums; }
+  .music-controls { display: flex; gap: var(--space-3); align-items: center; margin-top: var(--space-3); }
+  .music-controls .btn {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    display: grid; place-items: center;
+    font-size: 22px;
+    cursor: pointer;
+  }
+  .music-controls .btn.play {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--color-gold), #f1d9a8);
+    color: #1a1308;
+    border-color: var(--color-gold);
+    box-shadow: 0 8px 24px rgba(214, 188, 138, 0.30);
+  }
+
+  /* ─── Dock ─── */
+  .ivi-dock {
+    display: grid; grid-template-columns: 1fr auto; gap: var(--space-6); align-items: center;
+    padding: 0 48px;
+    background: rgba(10, 11, 14, 0.7);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-top: 1px solid var(--color-border-subtle);
+    position: relative; z-index: 2;
+  }
+  .dock-row { display: flex; gap: var(--space-4); align-items: center; }
+  .dock-btn {
+    height: 88px; min-width: 88px; padding: 0 var(--space-4);
+    border-radius: var(--radius-md);
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    background: transparent; border: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-xs); font-weight: var(--weight-medium);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+  .dock-btn:hover { color: var(--color-text-primary); background: var(--color-bg-1); }
+  .dock-btn.active { color: var(--color-text-primary); background: var(--color-bg-2); border: 1px solid var(--color-border-default); }
+  .dock-btn .ic { font-size: 28px; line-height: 1; }
+  .dock-btn .badge {
+    position: absolute; margin-left: 32px; margin-top: -28px;
+    min-width: 22px; height: 22px; padding: 0 6px;
+    background: var(--color-error); color: #fff;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-xs); font-weight: var(--weight-bold);
+    display: grid; place-items: center; font-family: var(--font-mono);
+  }
+  .dock-cta {
+    display: inline-flex; align-items: center; gap: var(--space-3);
+    height: 88px; padding: 0 var(--space-6);
+    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent));
+    color: #fff;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-sm); font-weight: var(--weight-semibold);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.40);
+    border: 0; cursor: pointer;
+  }
+
+  /* ─── Footer note ─── */
+  .build-tag {
+    position: fixed; bottom: 140px; left: 50%; transform: translateX(-50%);
+    padding: 6px 12px;
+    background: rgba(20, 22, 26, 0.8);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-muted);
+    font-size: var(--font-xs); font-family: var(--font-mono);
+    pointer-events: none;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+
+<div class="ivi-shell">
+
+  <!-- ═══════════════ Status Bar ═══════════════ -->
+  <div class="status-bar">
+    <div class="sb-left">
+      <div class="sb-time">14:32</div>
+      <div class="sb-meta">
+        <span class="date">星期二 · 5 月 26 日</span>
+        <span class="weather">☀ 晴 · 28° / 海淀区</span>
+      </div>
+    </div>
+
+    <div class="sb-vehicle-tag">
+      <span class="dot"></span>
+      <span>已锁车 · 续航 380 km</span>
+    </div>
+
+    <div class="sb-right">
+      <span class="sb-chip">📶 <strong>5G</strong></span>
+      <span class="sb-chip">📡 <strong>GPS</strong></span>
+      <span class="sb-chip">🔋 <strong>83%</strong></span>
+      <span class="sb-chip">🌡 主驾 <strong>22°</strong> · 副驾 <strong>23°</strong></span>
+      <div class="sb-avatar">戴</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Main ═══════════════ -->
+  <div class="ivi-main">
+
+    <!-- Map widget -->
+    <div class="map-widget">
+      <div class="map-canvas"></div>
+
+      <div class="vehicle-marker">▲</div>
+
+      <div class="map-nav-card">
+        <div class="ic">🧭</div>
+        <div class="info">
+          <div class="dest">前往 · 北京西二旗超充站</div>
+          <div class="stats">
+            <span>预计 <strong>8</strong> 分钟</span>
+            <span class="sep">·</span>
+            <span>剩 <strong>3.2 km</strong></span>
+            <span class="sep">·</span>
+            <span>畅通</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-traffic-card">⚠ 前方 1.2 km 拥堵 · 建议绕行</div>
+
+      <div class="map-speed-pill">
+        <span class="v">0</span><span class="u">km/h</span>
+      </div>
+
+      <div class="map-zoom">
+        <button>+</button>
+        <div class="sep"></div>
+        <button>−</button>
+      </div>
+    </div>
+
+    <!-- Right pane -->
+    <div class="right-pane">
+
+      <!-- Vehicle hero -->
+      <div class="vehicle-hero">
+        <div class="car-illustration">🚗</div>
+        <div class="vehicle-stats">
+          <div>
+            <div class="v-stat-label">⚡ 续航</div>
+            <div class="v-stat-value">380<span class="unit">km</span></div>
+            <div class="v-stat-bar"><span style="width:78%"></span></div>
+          </div>
+          <div>
+            <div class="v-stat-label">🔋 电量</div>
+            <div class="v-stat-value">78<span class="unit">%</span></div>
+            <div class="v-stat-bar"><span style="width:78%"></span></div>
+          </div>
+          <div>
+            <div class="v-stat-label">🌡 外温</div>
+            <div class="v-stat-value">28<span class="unit">°C</span></div>
+          </div>
+          <div>
+            <div class="v-stat-label">⏲ 待充电</div>
+            <div class="v-stat-value">32<span class="unit">min</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Apps grid -->
+      <div class="apps-grid">
+        <button class="app-tile">
+          <div class="ic">🧭</div>
+          <div class="label">导航</div>
+        </button>
+        <button class="app-tile">
+          <div class="ic">🎵</div>
+          <div class="label">音乐</div>
+        </button>
+        <button class="app-tile">
+          <div class="ic">📞</div>
+          <div class="label">电话</div>
+          <span class="dot"></span>
+        </button>
+        <button class="app-tile">
+          <div class="ic">📹</div>
+          <div class="label">360° 影像</div>
+        </button>
+
+        <button class="app-tile featured" onclick="location.href='home.html'">
+          <div class="ic">🛒</div>
+          <div class="label">商城</div>
+        </button>
+        <button class="app-tile">
+          <div class="ic">🔑</div>
+          <div class="label">数字钥匙</div>
+        </button>
+        <button class="app-tile">
+          <div class="ic">🎮</div>
+          <div class="label">娱乐</div>
+        </button>
+        <button class="app-tile">
+          <div class="ic">⚙</div>
+          <div class="label">设置</div>
+        </button>
+      </div>
+
+      <!-- Music card -->
+      <div class="music-card">
+        <div class="album-art">暮</div>
+        <div class="music-info">
+          <div class="music-track">暮色</div>
+          <div class="music-artist">老狼 · 晴朗</div>
+          <div class="music-progress"></div>
+          <div class="music-time"><span>1:23</span><span>3:45</span></div>
+          <div class="music-controls">
+            <button class="btn">⏮</button>
+            <button class="btn play">▶</button>
+            <button class="btn">⏭</button>
+            <button class="btn" style="margin-left:auto">♡</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ Dock ═══════════════ -->
+  <div class="ivi-dock">
+    <div class="dock-row">
+      <button class="dock-btn active">
+        <span class="ic">⌂</span>
+        <span>主页</span>
+      </button>
+      <button class="dock-btn">
+        <span class="ic">🧭</span>
+        <span>导航</span>
+      </button>
+      <button class="dock-btn">
+        <span class="ic">🎵</span>
+        <span>音乐</span>
+      </button>
+      <button class="dock-btn" onclick="location.href='home.html'" style="position:relative">
+        <span class="ic">🛒</span>
+        <span>商城</span>
+        <span class="badge">2</span>
+      </button>
+      <button class="dock-btn">
+        <span class="ic">⚙</span>
+        <span>车辆</span>
+      </button>
+      <button class="dock-btn" style="position:relative">
+        <span class="ic">🔔</span>
+        <span>通知</span>
+        <span class="badge">3</span>
+      </button>
+    </div>
+
+    <button class="dock-cta">
+      🎤 你好小智
+    </button>
+  </div>
+
+</div>
+
+<div class="build-tag">车机首页 · 2560 × 1600 · 停车态</div>
+
+<script src="styles/autofit.js"></script>
+</body>
+</html>

@@ -25,6 +25,7 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 | 文档 | 摘要 | 状态 | 日期 |
 |---|---|---|---|
 | [design-system.md](./design/design-system.md) | **设计系统 v1.0 · 系统级 token 与组件契约的单一真相**（颜色 / 字号 / 间距 / 动效 / 行车态降级 / 横屏适配） | Draft | 2026-05-26 |
+| [interaction-patterns.md](./design/interaction-patterns.md) | **跨页面交互中间层** · 9 套交互模式（再买/登录拦截/地址/支付/购物车同步/搜索/通知/错误恢复/行车态切换）+ 8 维状态矩阵（页面×行车×在线×登录）+ 6 棵决策树 | Draft | 2026-05-26 |
 | [page-spec.md](./design/page-spec.md) | **UI 视觉层权威源** · 设计调性 + 12 页区块布局（含行车态首页 + 地址簿）+ mock 字段 + 首批 5 页建议 · 路由已与 feature-spec 对齐 | Draft | 2026-05-26 |
 
 ## 🖥 高保真静态原型 mockups/（仓库根目录）
