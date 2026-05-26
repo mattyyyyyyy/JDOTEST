@@ -44,7 +44,11 @@
 
 | 日期 | Agent | 完成项 | 关键 commit |
 |---|---|---|---|
-| _待登记_ | | | |
+| 2026-05-27 | claude-adr-0009 | **ADR-0009 Accepted** 锁定 7 类场景（能量补给 / 爱车养护 / 一路吃喝 / 远行出差 / 车内好物 / 24h 救援 / 严选好物），以 V3 mockup 为准。**ADR-0008 → Superseded**。同步 [research/ia-scene-vs-category.md](./research/ia-scene-vs-category.md) §附录 + [research/competitor-analysis.md](./research/competitor-analysis.md) 引用 | (pending) |
+| 2026-05-27 | claude-pencil-import-v3 | **导入 v3 原型**：21 屏（与 v2 同骨架），mall-home 大改版（顶部 banner + 下方 rail+产品分栏 / 去掉"查看全部"按钮）· 同步 wallpaper-path fix · 落到 `mockups/jdo-pencil-v3/`（**保留 v1/v2**） | (pending) |
+| 2026-05-27 | claude-pencil-import-v2 | **导入 v2 原型**：21 屏全功能 React 原型（IVI + 商城 20 屏，含 ADR-0008 场景型 IA 落地 + 暗夜极光车型壁纸 + 行车态降级演示）· 落到 `mockups/jdo-pencil-v2/`（**保留 v1**）· 修复 bundle 的 wallpaper 相对路径 bug | (pending) |
+| 2026-05-27 | claude-ia-scene-first | **场景型 IA 三件套**：①竞品报告追加车机商店 v0.2.0 观察 ②`research/ia-scene-vs-category.md` 新增 ③`ADR-0008-ia-scene-first` 决议为场景型 IA（Accepted） | (pending) |
+| 2026-05-27 | claude-pencil-import | 从 Claude Design 导出包导入 `JDO 车机电商.html` 原型（IVI 首页 + 商城 6 屏 React + 2560×1600 画布） · 落到 `mockups/jdo-pencil/` | (pending) |
 
 ---
 
@@ -91,6 +95,77 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 | [styles/base.css](../mockups/styles/base.css) | reset + 全局基础样式 | 2026-05-26 |
 | [styles/components.css](../mockups/styles/components.css) | 通用组件样式 | 2026-05-26 |
 
+### `mockups/jdo-pencil/` · Claude Design 导出包（独立子项目）
+
+> 从 [api.anthropic.com/v1/design/h/LLdP3lnOvyk1SaotL2mf0g](https://api.anthropic.com/v1/design/h/LLdP3lnOvyk1SaotL2mf0g) 导入。
+> 2560×1600 单画布、React 18 + Babel standalone 运行时；与上方 `mockups/` 主原型并行，**不共享 tokens.css**。
+> 入口：浏览器直接打开 `mockups/jdo-pencil/JDO 车机电商.html`。
+
+| 文件 | 用途 | 最后更新 |
+|---|---|---|
+| [JDO 车机电商.html](../mockups/jdo-pencil/JDO%20%E8%BD%A6%E6%9C%BA%E7%94%B5%E5%95%86.html) | 入口 HTML · 2560×1600 画布 · Babel 现编 JSX | 2026-05-27 |
+| [app.jsx](../mockups/jdo-pencil/app.jsx) | 路由 + Tweaks panel（深 / 浅 + 3/4/5 列 + 6 屏切换） | 2026-05-27 |
+| [components.jsx](../mockups/jdo-pencil/components.jsx) | Icon / StatusBar / Dock / ProductCard | 2026-05-27 |
+| [data.js](../mockups/jdo-pencil/data.js) | 12 分类 + 30 商品 + 2 banner（Unsplash 真图） | 2026-05-27 |
+| [tweaks-panel.jsx](../mockups/jdo-pencil/tweaks-panel.jsx) | 浮窗 tweaks 控件库（来自 Claude Design starter） | 2026-05-27 |
+| [screens/ivi-home.jsx](../mockups/jdo-pencil/screens/ivi-home.jsx) | 01 · 车机首页（状态栏 + 车型占位 + 4 张玻璃卡 + Dock） | 2026-05-27 |
+| [screens/mall-home.jsx](../mockups/jdo-pencil/screens/mall-home.jsx) | 02 · 商城首页（侧栏 12 类 + 秒杀 hero + 24 件推荐） | 2026-05-27 |
+| [screens/mall-category.jsx](../mockups/jdo-pencil/screens/mall-category.jsx) | 03 · 分类 / 搜索（chips + 排序条 + 商品网格） | 2026-05-27 |
+| [screens/mall-detail.jsx](../mockups/jdo-pencil/screens/mall-detail.jsx) | 04 · 商品详情（左图右规格 + 自提区 + 双 CTA） | 2026-05-27 |
+| [screens/mall-cart.jsx](../mockups/jdo-pencil/screens/mall-cart.jsx) | 05 · 购物车（多选 + 数量 + sticky 合计） | 2026-05-27 |
+| [screens/mall-checkout.jsx](../mockups/jdo-pencil/screens/mall-checkout.jsx) | 06 · 确认订单（地址 / 配送 / 支付 三段式） | 2026-05-27 |
+| [styles/tokens.css](../mockups/jdo-pencil/styles/tokens.css) | tokens（Noto Sans SC + 暗色为主，与主 mockups 同源） | 2026-05-27 |
+| [styles/base.css](../mockups/jdo-pencil/styles/base.css) | reset + 全局基础样式 | 2026-05-27 |
+| [styles/components.css](../mockups/jdo-pencil/styles/components.css) | 通用组件样式 | 2026-05-27 |
+| [styles/ivi.css](../mockups/jdo-pencil/styles/ivi.css) | 2560×1600 画布壳层 + IVI 卡片 + 商城 home/category | 2026-05-27 |
+| [styles/mall.css](../mockups/jdo-pencil/styles/mall.css) | mall 后续屏样式（detail / cart / checkout） | 2026-05-27 |
+| [styles/autofit.js](../mockups/jdo-pencil/styles/autofit.js) | 缩放工具栏（自适应 / 1:1 / +/-） | 2026-05-27 |
+
+### `mockups/jdo-pencil-v2/` · Claude Design 导出包 · v2（独立子项目）
+
+> 从 [api.anthropic.com/v1/design/h/8W1sjP0OsCxyOnXKMZf5Kw](https://api.anthropic.com/v1/design/h/8W1sjP0OsCxyOnXKMZf5Kw) 导入。
+> **21 屏全功能 React 原型 + ADR-0008 场景型 IA + 暗夜极光车型壁纸**。
+> 与 v1（`jdo-pencil/`）并列保留；v1 是 6 屏雏形、v2 是完整产品形态。
+> 入口：`mockups/jdo-pencil-v2/JDO 车机电商.html`。**注意 `file://` 跑不起来（Babel-standalone 限制），需起 HTTP server**（`npx http-server mockups -p 8765` 然后 `http://127.0.0.1:8765/jdo-pencil-v2/JDO 车机电商.html`）。
+
+| 类别 | 文件清单 |
+|---|---|
+| **入口** | `JDO 车机电商.html`（21 个 jsx + 9 个 css 全部 link） |
+| **基础设施** | `app.jsx`（21 路由 + tweaks）· `components.jsx`（Icon/StatusBar/Dock/ProductCard）· `data.js`（场景 + 商品 + banner）· `tweaks-panel.jsx` |
+| **IVI** | `screens/ivi-home.jsx`（液态玻璃 4 卡 + 真车型壁纸） |
+| **商城主链路** | `screens/mall-home.jsx`（场景 rail · 6 类）· `mall-category.jsx` · `mall-search.jsx` · `mall-detail.jsx` · `mall-cart.jsx` · `mall-checkout.jsx` · `mall-pay.jsx`（扫码） |
+| **个人中心** | `mall-profile.jsx` · `mall-login.jsx`（扫码） · `mall-orders.jsx` · `mall-tracking.jsx` · `mall-aftersale.jsx` · `mall-reviews.jsx` · `mall-favorites.jsx` · `mall-addresses.jsx` · `mall-coupons.jsx` · `mall-points.jsx` · `mall-wallet.jsx` · `mall-settings.jsx` |
+| **行车态** | `screens/mall-driving.jsx`（再买一次 + 语音卡 · 大字号 + 高对比） |
+| **样式** | `styles/tokens.css` · `base.css` · `components.css` · `ivi.css` · `mall.css` · `mall-extras.css` / `mall-extras2.css` / `mall-extras3.css`（按页面分文件，避免巨型样式表）· `mall-home-hero.css`（场景推荐 hero 专属） · `autofit.js` |
+| **资源** | `assets/ivi-wallpaper-dark.png`（2.78 MB · 暗夜极光 + Porsche Cayenne） |
+
+**已知 bundle bug 与本地修复：**
+- `styles/ivi.css` L50 原写 `url("assets/ivi-wallpaper-dark.png")`，CSS 内相对路径会解析到 `styles/assets/`（404）。已在导入时改为 `url("../assets/ivi-wallpaper-dark.png")`。
+
+**v2 vs v1 关键差异：**
+- IA：v1 = 12 类品类型（推荐 / 秒杀 / 车品…）；**v2 = 6 类场景型（加油充电 / 洗车保养 / 餐饮服务 / 出行旅行 / 车品配件 / 应急救援）**，落地 ADR-0008
+- 屏数：v1 = 6 屏；v2 = 21 屏（含登录 / 钱包 / 积分 / 优惠券 / 售后 / 物流 / 行车态 等）
+- 视觉：v1 = 车型 SVG 占位；**v2 = 实际 2.78 MB 暗夜极光车型壁纸**
+- 行车态：v1 无；**v2 有专屏 `mall-driving`**，单独大字号 + 再买一次 + 语音卡
+
+### `mockups/jdo-pencil-v3/` · Claude Design 导出包 · v3（独立子项目）
+
+> 从 [api.anthropic.com/v1/design/h/AYO7p9fjLJqHDflxHJ03wA](https://api.anthropic.com/v1/design/h/AYO7p9fjLJqHDflxHJ03wA) 导入。
+> **与 v2 同骨架（21 屏 / 同 9 CSS / 同 wallpaper），mall-home 大改版**。
+> 与 v1（雏形）、v2（基线）并列保留；v3 是 mall-home 调优定稿。
+> 入口：`mockups/jdo-pencil-v3/JDO 车机电商.html`。同样需 HTTP server（已有 `npx http-server mockups -p 8765` 在跑：`http://127.0.0.1:8765/jdo-pencil-v3/JDO 车机电商.html`）。
+
+**v3 vs v2 关键差异**（从 chat transcript 反推 · `screens/mall-home.jsx` + `styles/mall-home-hero.css` 重写）：
+- **mall-home 布局重排**：v2 = 左 rail + 右上 banner + 右下产品；**v3 = 顶部 banner + 下方左 rail + 右产品**（chat L973 用户原话）
+- **顶部 banner 3 块拆法**：1 个左侧官方广告 + 2 个右侧"车内场景触发"（正午到达 / 今晚出差），右侧自动滑动（chat L921）
+- **删除冗余按钮**：去掉"查看全部" + 去掉收藏 / 浏览历史按钮（chat L973）
+- **场景由 6 改 7**（chat L790 用户决定），名字与 ADR-0008 略有出入，需要后续 sync 回 ADR
+- **修了"立即购买点击后是黑色"的 bug**（chat L989 最后一次反馈）
+
+**bundle bug & 修复**：与 v2 同：`styles/ivi.css:50` 的 wallpaper URL `assets/...` 改成 `../assets/...`。
+
+**与 ADR-0008 的 drift**：v3 的 7 类场景命名可能与 ADR-0008 锁定的 6 类不一致，**这是落地实施漂移**，下一轮要么改 mockup 与 ADR 对齐，要么用 Superseded 流程升级 ADR-0008。建议看 v3 实际 rail 内容后再定。
+
 > 路由命名以 [feature-spec.md](./feature-spec.md) 为准，不一致时改 page-spec / mockups。
 > 这些 mockups 是 React 实装的视觉对照基准。`packages/design-tokens` 落地时直接从 `mockups/styles/tokens.css` 迁移。
 
@@ -107,9 +182,12 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 | [ADR-0005](./decisions/ADR-0005-deployment-strategy.md) | 部署方案（Vercel 前端 + Railway/Render 后端） | Accepted | 2026-05-25 |
 | [ADR-0006](./decisions/ADR-0006-monorepo-tool.md) | monorepo 工具选型（pnpm + Turborepo） | Accepted | 2026-05-25 |
 | [ADR-0007](./decisions/ADR-0007-ui-library-and-design-system.md) | UI 库 / 设计系统起点（自研 tokens + Tailwind + Radix Primitives） | Accepted | 2026-05-25 |
+| [ADR-0008](./decisions/ADR-0008-ia-scene-first.md) | 信息架构按"用车场景"组织（6 类场景型一级分类，取代 12 类品类型） | **Superseded by ADR-0009** | 2026-05-27 |
+| [ADR-0009](./decisions/ADR-0009-ia-7-scenes-v3.md) | **信息架构 v2 · 7 类场景型分类（V3 mockup 定稿 · 能量补给 / 爱车养护 / 一路吃喝 / 远行出差 / 车内好物 / 24h 救援 / 严选好物）** | Accepted | 2026-05-27 |
 
 > **依赖顺序**：ADR-0006 → 0001 / 0002 / 0003 → 0007 → 0004 → 0005。
 > 详见 PRD.md §起手 Coding 计划 / 开干前必须先定的 ADR。
+> **ADR-0009 触发的下游改动**：feature-spec.md §IA、PRD.md §核心场景、interaction-patterns.md、mockups 的 rail 内容 + 后端 `categories` seed 都需要 sync 到 7 类版本，详见 ADR-0009 §后续需要做的事。
 
 ## 🔍 调研报告 research/
 
@@ -117,7 +195,8 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 
 | 文档 | 摘要 | 状态 | 日期 |
 |---|---|---|---|
-| [competitor-analysis.md](./research/competitor-analysis.md) | 7 家车厂竞品（NIO / 理想 / 问界 / Tesla / 小鹏 / 小米 / Polestar）+ AAOS / NHTSA / HarmonyOS HMI 规范 + 给我们 Demo 的设计建议 | Draft | 2026-05-26 |
+| [competitor-analysis.md](./research/competitor-analysis.md) | 7 家车厂竞品（NIO / 理想 / 问界 / Tesla / 小鹏 / 小米 / Polestar）+ AAOS / NHTSA / HarmonyOS HMI 规范 + 给我们 Demo 的设计建议 · **2026-05-27 追加车机商店 v0.2.0-foundation 实机观察** | Accepted | 2026-05-27 |
+| [ia-scene-vs-category.md](./research/ia-scene-vs-category.md) | **场景型 vs 品类型 IA 调研** · 5 节论证 + 反方观点反驳 + 提议的 6 类场景一级分类 · 输入到 ADR-0008 | Draft | 2026-05-27 |
 
 ## 🖼 图示 diagrams/（仓库根目录）
 
