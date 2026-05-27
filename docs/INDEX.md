@@ -32,8 +32,10 @@
 | `docs/feature-spec.md` | 工程 agent | 路由 / 接口 / 状态机权威源，**改前必须在 Active Workstreams 登记** |
 | `docs/PRD.md` | 产品 agent | 升版本前必须在 Active Workstreams 登记 |
 | `docs/research/` | 调研 agent | 调研先来这里检索，避免重复 |
-| `mockups/*.html` | UI agent | 单文件改动可并行；样式文件 `styles/*.css` 改前登记 |
-| `mockups/styles/tokens.css` | UI agent | **冲突高发**，改前登记必做 |
+| `mockups/jdo-pencil-v3/**` | UI agent | **项目主前端**（2026-05-27 确立），后续迭代 / 部署均基于此 |
+| `mockups/jdo-pencil/` `mockups/jdo-pencil-v2/` | — | **已归档**，不再维护，仅供参考 |
+| `mockups/*.html`（根目录） | — | **已归档**，V3 替代，不再维护 |
+| `mockups/styles/tokens.css`（根目录） | — | **已归档**，以 V3 的 `styles/tokens.css` 为准 |
 | **`docs/INDEX.md`** | **全员 append-only** | 任何 agent 都可在 Workstreams / Activity 加行，不可改/删别人的 |
 | **`CLAUDE.md`** | **全员协商** | 改公约前必须在 Active Workstreams 登记并征询其它在线 agent |
 | `apps/h5/**` `services/api/**` `packages/**` | 实施 agent | 待落地，按 ADR-0006 monorepo 结构 |
@@ -44,6 +46,7 @@
 
 | 日期 | Agent | 完成项 | 关键 commit |
 |---|---|---|---|
+| 2026-05-27 | claude-main | **V3 确立为项目主前端**：`mockups/jdo-pencil-v3/` 为后续迭代/部署唯一版本；V1/V2 及根目录 `mockups/*.html` 标记为已归档；后续计划迁移到 `apps/h5`（Vite+TS） | (pending) |
 | 2026-05-27 | claude-adr-0009 | **ADR-0009 Accepted** 锁定 7 类场景（能量补给 / 爱车养护 / 一路吃喝 / 远行出差 / 车内好物 / 24h 救援 / 严选好物），以 V3 mockup 为准。**ADR-0008 → Superseded**。同步 [research/ia-scene-vs-category.md](./research/ia-scene-vs-category.md) §附录 + [research/competitor-analysis.md](./research/competitor-analysis.md) 引用 | (pending) |
 | 2026-05-27 | claude-pencil-import-v3 | **导入 v3 原型**：21 屏（与 v2 同骨架），mall-home 大改版（顶部 banner + 下方 rail+产品分栏 / 去掉"查看全部"按钮）· 同步 wallpaper-path fix · 落到 `mockups/jdo-pencil-v3/`（**保留 v1/v2**） | (pending) |
 | 2026-05-27 | claude-pencil-import-v2 | **导入 v2 原型**：21 屏全功能 React 原型（IVI + 商城 20 屏，含 ADR-0008 场景型 IA 落地 + 暗夜极光车型壁纸 + 行车态降级演示）· 落到 `mockups/jdo-pencil-v2/`（**保留 v1**）· 修复 bundle 的 wallpaper 相对路径 bug | (pending) |
@@ -56,7 +59,7 @@
 
 - [CLAUDE.md](../CLAUDE.md) — 项目协作铁律 · Accepted · 2026-05-25
 - [docs/PRD.md](./PRD.md) — 产品需求文档 v0.4 · Draft · 2026-05-26
-- [mockups/index.html](../mockups/index.html) — **11 屏高保真原型总览**（浏览器打开即看）· v1.0 · 2026-05-26
+- [mockups/jdo-pencil-v3/JDO 车机电商.html](../mockups/jdo-pencil-v3/JDO%20%E8%BD%A6%E6%9C%BA%E7%94%B5%E5%95%86.html) — **项目主前端 · 21 屏 React 原型（V3）**· 需 HTTP server（`npx serve mockups/jdo-pencil-v3 -p 3000`）
 - [docs/feature-spec.md](./feature-spec.md) — **详细功能清单 v1.0 · 路由命名 / 功能拆解 / 状态机 / 接口 / 验收 checklist 的权威源** · Draft · 2026-05-26
 
 ## 📐 架构设计 architecture/
@@ -75,31 +78,33 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 | [interaction-patterns.md](./design/interaction-patterns.md) | **跨页面交互中间层** · 9 套交互模式（再买/登录拦截/地址/支付/购物车同步/搜索/通知/错误恢复/行车态切换）+ 8 维状态矩阵（页面×行车×在线×登录）+ 6 棵决策树 | Draft | 2026-05-26 |
 | [page-spec.md](./design/page-spec.md) | **UI 视觉层权威源** · 设计调性 + 12 页区块布局（含行车态首页 + 地址簿）+ mock 字段 + 首批 5 页建议 · 路由已与 feature-spec 对齐 | Draft | 2026-05-26 |
 
-## 🖥 高保真静态原型 mockups/（仓库根目录）
+## 🖥 项目主前端 mockups/jdo-pencil-v3/（⭐ 当前）
 
-| 文件 | 用途 | 最后更新 |
+> **2026-05-27 确立为项目主前端**，后续迭代与部署均基于此。根目录 `mockups/*.html` 和 V1/V2 已归档。
+
+### 已归档原型 mockups/（根目录，2026-05-27 归档）
+
+> 以下静态 HTML 原型已被 V3 替代，不再维护，仅供参考。
+
+| 文件 | 用途 | 归档前最后更新 |
 |---|---|---|
-| [index.html](../mockups/index.html) | **总览导航 · 11 屏缩略图 + 跳文档** | 2026-05-26 |
-| [home.html](../mockups/home.html) | 首页（停车态）· Hero / 分类 / 再买 / 秒杀 / 推荐 | 2026-05-26 |
-| [category.html](../mockups/category.html) | 分类页 · 左 sticky 一级 + 商品 grid | 2026-05-26 |
-| [search.html](../mockups/search.html) | 搜索 · 大输入 + 巨型语音 + 联想 | 2026-05-26 |
-| [product-detail.html](../mockups/product-detail.html) | 商品详情 · 横屏左右 60/40 分栏 | 2026-05-26 |
-| [cart.html](../mockups/cart.html) | 购物车 · 表格化 + sticky 玻璃合计 | 2026-05-26 |
-| [checkout.html](../mockups/checkout.html) | 结算 · 含「送到车上」差异化配送 | 2026-05-26 |
-| [payment.html](../mockups/payment.html) | 支付 · 大二维码 + 88px 巨额价 | 2026-05-26 |
-| [order-detail.html](../mockups/order-detail.html) | 订单详情 · 64px 取货码 + 物流时间线 | 2026-05-26 |
-| [profile.html](../mockups/profile.html) | 个人中心 · 数据卡 + 设置 + Demo 速度模拟器 | 2026-05-26 |
-| [login.html](../mockups/login.html) | 车机扫码登录 · 左 pitch + 右 440px QR | 2026-05-26 |
-| [driving-home.html](../mockups/driving-home.html) | **行车态首页（核心差异化）** · 3 张巨卡 + 120px 主按钮 | 2026-05-26 |
-| [styles/tokens.css](../mockups/styles/tokens.css) | CSS 变量，与 design-system.md §1 一致 | 2026-05-26 |
-| [styles/base.css](../mockups/styles/base.css) | reset + 全局基础样式 | 2026-05-26 |
-| [styles/components.css](../mockups/styles/components.css) | 通用组件样式 | 2026-05-26 |
+| [index.html](../mockups/index.html) | 总览导航 · 11 屏缩略图 + 跳文档 | 2026-05-26 |
+| [home.html](../mockups/home.html) | 首页（停车态） | 2026-05-26 |
+| [category.html](../mockups/category.html) | 分类页 | 2026-05-26 |
+| [search.html](../mockups/search.html) | 搜索 | 2026-05-26 |
+| [product-detail.html](../mockups/product-detail.html) | 商品详情 | 2026-05-26 |
+| [cart.html](../mockups/cart.html) | 购物车 | 2026-05-26 |
+| [checkout.html](../mockups/checkout.html) | 结算 | 2026-05-26 |
+| [payment.html](../mockups/payment.html) | 支付 | 2026-05-26 |
+| [order-detail.html](../mockups/order-detail.html) | 订单详情 | 2026-05-26 |
+| [profile.html](../mockups/profile.html) | 个人中心 | 2026-05-26 |
+| [login.html](../mockups/login.html) | 车机扫码登录 | 2026-05-26 |
+| [driving-home.html](../mockups/driving-home.html) | 行车态首页 | 2026-05-26 |
 
-### `mockups/jdo-pencil/` · Claude Design 导出包（独立子项目）
+### 项目主前端 mockups/jdo-pencil-v3/
 
-> 从 [api.anthropic.com/v1/design/h/LLdP3lnOvyk1SaotL2mf0g](https://api.anthropic.com/v1/design/h/LLdP3lnOvyk1SaotL2mf0g) 导入。
-> 2560×1600 单画布、React 18 + Babel standalone 运行时；与上方 `mockups/` 主原型并行，**不共享 tokens.css**。
-> 入口：浏览器直接打开 `mockups/jdo-pencil/JDO 车机电商.html`。
+> **已归档（2026-05-27），不再维护。项目主前端已切换到 v3。**
+> 原从 [api.anthropic.com/v1/design/h/LLdP3lnOvyk1SaotL2mf0g](https://api.anthropic.com/v1/design/h/LLdP3lnOvyk1SaotL2mf0g) 导入。6 屏雏形版本，仅供参考。
 
 | 文件 | 用途 | 最后更新 |
 |---|---|---|
@@ -121,12 +126,10 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 | [styles/mall.css](../mockups/jdo-pencil/styles/mall.css) | mall 后续屏样式（detail / cart / checkout） | 2026-05-27 |
 | [styles/autofit.js](../mockups/jdo-pencil/styles/autofit.js) | 缩放工具栏（自适应 / 1:1 / +/-） | 2026-05-27 |
 
-### `mockups/jdo-pencil-v2/` · Claude Design 导出包 · v2（独立子项目）
+### `mockups/jdo-pencil-v2/` · ~~Claude Design 导出包 v2~~ 已归档
 
-> 从 [api.anthropic.com/v1/design/h/8W1sjP0OsCxyOnXKMZf5Kw](https://api.anthropic.com/v1/design/h/8W1sjP0OsCxyOnXKMZf5Kw) 导入。
-> **21 屏全功能 React 原型 + ADR-0008 场景型 IA + 暗夜极光车型壁纸**。
-> 与 v1（`jdo-pencil/`）并列保留；v1 是 6 屏雏形、v2 是完整产品形态。
-> 入口：`mockups/jdo-pencil-v2/JDO 车机电商.html`。**注意 `file://` 跑不起来（Babel-standalone 限制），需起 HTTP server**（`npx http-server mockups -p 8765` 然后 `http://127.0.0.1:8765/jdo-pencil-v2/JDO 车机电商.html`）。
+> **已归档（2026-05-27），不再维护。项目主前端已切换到 v3。**
+> 原从 [api.anthropic.com/v1/design/h/8W1sjP0OsCxyOnXKMZf5Kw](https://api.anthropic.com/v1/design/h/8W1sjP0OsCxyOnXKMZf5Kw) 导入。21 屏基线版本，仅供参考。
 
 | 类别 | 文件清单 |
 |---|---|
@@ -148,12 +151,13 @@ _暂无（首份待 ADR-0001 ~ 0003 落地后产出）_
 - 视觉：v1 = 车型 SVG 占位；**v2 = 实际 2.78 MB 暗夜极光车型壁纸**
 - 行车态：v1 无；**v2 有专屏 `mall-driving`**，单独大字号 + 再买一次 + 语音卡
 
-### `mockups/jdo-pencil-v3/` · Claude Design 导出包 · v3（独立子项目）
+### `mockups/jdo-pencil-v3/` · ⭐ 项目主前端（2026-05-27 确立）
 
+> **项目主前端，后续迭代与部署均基于此版本。V1/V2 已归档，不再维护。**
+>
 > 从 [api.anthropic.com/v1/design/h/AYO7p9fjLJqHDflxHJ03wA](https://api.anthropic.com/v1/design/h/AYO7p9fjLJqHDflxHJ03wA) 导入。
-> **与 v2 同骨架（21 屏 / 同 9 CSS / 同 wallpaper），mall-home 大改版**。
-> 与 v1（雏形）、v2（基线）并列保留；v3 是 mall-home 调优定稿。
-> 入口：`mockups/jdo-pencil-v3/JDO 车机电商.html`。同样需 HTTP server（已有 `npx http-server mockups -p 8765` 在跑：`http://127.0.0.1:8765/jdo-pencil-v3/JDO 车机电商.html`）。
+> **21 屏全功能 React 原型 + ADR-0009 场景型 IA + 暗夜极光车型壁纸**。
+> 入口：`mockups/jdo-pencil-v3/JDO 车机电商.html`。需 HTTP server（`npx serve mockups/jdo-pencil-v3 -p 3000`）。
 
 **v3 vs v2 关键差异**（从 chat transcript 反推 · `screens/mall-home.jsx` + `styles/mall-home-hero.css` 重写）：
 - **mall-home 布局重排**：v2 = 左 rail + 右上 banner + 右下产品；**v3 = 顶部 banner + 下方左 rail + 右产品**（chat L973 用户原话）

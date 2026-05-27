@@ -5,6 +5,7 @@ const { useState: useStatePt } = React;
 function MallPoints({ onNav }) {
   const u = (id, w = 600) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=70`;
   const [cat, setCat] = useStatePt('all');
+  const [exchanging, setExchanging] = useStatePt(null);
 
   const cats = [
     { id: 'all',     name: '全部',   n: 124 },
@@ -128,9 +129,11 @@ function MallPoints({ onNav }) {
                   <div className="points-bar"><div className="fill" style={{ width: (it.pctBar * 100) + '%' }} /></div>
                   <div className="points-meta">
                     <span>已兑换 {Math.round(it.pctBar * 1000)} 份</span>
-                    <span style={{ color: 'var(--color-mint)' }}>
-                      {8248 >= it.pts ? '可兑换' : `还差 ${(it.pts - 8248).toLocaleString()} 分`}
-                    </span>
+                    {8248 >= it.pts ? (
+                      <button className="points-exchange-btn" onClick={(e) => { e.stopPropagation(); setExchanging(it); }}>立即兑换</button>
+                    ) : (
+                      <span style={{ color: 'var(--color-text-muted)' }}>还差 {(it.pts - 8248).toLocaleString()} 分</span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -138,6 +141,23 @@ function MallPoints({ onNav }) {
           </div>
         </div>
       </div>
+      {exchanging && (
+        <div className="points-overlay" onClick={() => setExchanging(null)}>
+          <div className="points-confirm" onClick={(e) => e.stopPropagation()}>
+            <h3>确认兑换</h3>
+            <div className="points-confirm-name">{exchanging.name}</div>
+            <div className="points-confirm-cost">
+              <span className="pts">{exchanging.pts.toLocaleString()}</span> 积分
+              {exchanging.cash > 0 && <> + <span className="cash">¥ {exchanging.cash}</span></>}
+            </div>
+            <div style={{ color: 'var(--color-text-muted)', fontSize: 18 }}>兑换后积分余额：{(8248 - exchanging.pts).toLocaleString()} 分</div>
+            <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
+              <button className="spec-opt" style={{ flex: 1, height: 64, justifyContent: 'center' }} onClick={() => setExchanging(null)}>取消</button>
+              <button className="btn-big primary" style={{ flex: 1, height: 64 }} onClick={() => setExchanging(null)}>确认兑换</button>
+            </div>
+          </div>
+        </div>
+      )}
       <Dock route="mall-points" onNav={onNav} />
     </>
   );

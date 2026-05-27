@@ -117,7 +117,7 @@
 }
 .points-card {
   position: relative; overflow: hidden;
-  padding: 32px 36px;
+  padding: 24px 28px;
   background: linear-gradient(135deg, #d6bc8a 0%, #a07d3c 100%);
   border-radius: 28px;
   color: #2a1d05;
@@ -133,13 +133,13 @@
 .points-card .label { font-size: 22px; opacity: 0.85; }
 .points-amount {
   font-family: var(--font-mono); font-weight: 600;
-  font-size: 120px; line-height: 1; letter-spacing: -0.04em;
+  font-size: 72px; line-height: 1; letter-spacing: -0.04em;
   margin: 6px 0;
 }
-.points-amount .unit { font-size: 36px; opacity: 0.7; margin-left: 6px; font-weight: 400; }
+.points-amount .unit { font-size: 24px; opacity: 0.7; margin-left: 6px; font-weight: 400; }
 .points-stats { display: flex; gap: 36px; margin-top: 8px; font-size: 20px; }
 .points-stats .stat { display: flex; flex-direction: column; gap: 2px; }
-.points-stats .stat .v { font-family: var(--font-mono); font-size: 28px; font-weight: 500; }
+.points-stats .stat .v { font-family: var(--font-mono); font-size: 22px; font-weight: 500; }
 .points-card .level-tag {
   position: absolute; top: 24px; right: 28px;
   display: inline-flex; align-items: center; gap: 8px;
@@ -209,7 +209,39 @@
   overflow: hidden;
 }
 .points-bar .fill { height: 100%; background: linear-gradient(90deg, var(--color-gold), #b78a3a); }
-.points-meta { font-size: 16px; color: var(--color-text-muted); display: flex; justify-content: space-between; }
+.points-meta { font-size: 16px; color: var(--color-text-muted); display: flex; justify-content: space-between; align-items: center; }
+.points-exchange-btn {
+  height: 32px; padding: 0 16px;
+  background: rgba(94,234,212,0.12);
+  border: 1px solid rgba(94,234,212,0.30);
+  border-radius: 9999px;
+  color: var(--color-mint);
+  font-size: 16px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.points-exchange-btn:hover { background: rgba(94,234,212,0.20); }
+.points-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.60);
+  backdrop-filter: blur(8px);
+  display: grid; place-items: center;
+  z-index: 100;
+}
+.points-confirm {
+  padding: 36px 44px;
+  background: rgba(20,22,26,0.95);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 28px;
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 500px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.50);
+}
+.points-confirm h3 { font-size: 28px; font-weight: 500; }
+.points-confirm-name { font-size: 24px; }
+.points-confirm-cost { font-size: 22px; color: var(--color-mint); }
+.points-confirm-cost .pts { font-family: var(--font-mono); font-size: 32px; font-weight: 600; }
+.points-confirm-cost .cash { font-family: var(--font-mono); }
 
 /* ─── Aftersale ─── */
 .aftersale-body {

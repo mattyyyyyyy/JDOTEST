@@ -1,4 +1,4 @@
-/* global React, StatusBar, Dock, Icon */
+/* global React, StatusBar, Dock, Icon, ProductCard */
 
 const { useState: useStateFv, useMemo: useMemoFv, useEffect: useEffectFv } = React;
 
@@ -102,48 +102,8 @@ function MallFavorites({ onNav }) {
               <span style={{ color: 'var(--color-mint)', fontSize: 20, cursor: 'pointer', alignSelf: 'center' }}>降序 · 加入时间</span>
             </div>
 
-            <div className="fav-grid" style={{ '--cols': 5 }}>
-              {filterFavs.map((p) => (
-                <div
-                  key={p.id}
-                  className={'fav-card' + (selected.has(p.id) ? ' selected' : '')}
-                  onClick={() => onNav('mall-detail')}
-                >
-                  <div className="fav-check" onClick={(e) => { e.stopPropagation(); toggle(p.id); }}>
-                    {selected.has(p.id) && <Icon name="plus" size={20} sw={3} stroke="#03171f" />}
-                  </div>
-                  <div className="fav-img" style={{ backgroundImage: `url(${p.img})` }} />
-                  <div className="fav-info">
-                    <div className="fav-title">{p.title}</div>
-                    <div className="fav-meta">收藏于 {p.favAt}</div>
-                    <div className="fav-bottom">
-                      <div className="fav-price">
-                        <span className="cur"><span className="sym">¥</span>{p.price.toFixed(p.price % 1 ? 1 : 0)}</span>
-                        {p.ori && <span className="ori">¥{p.ori}</span>}
-                      </div>
-                      {p.drop > 0 && <span className="fav-tag drop">↓ {p.drop}%</span>}
-                      {p.oos && <span className="fav-tag oos">已售罄</span>}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Bulk bar */}
-            <div className="fav-bulkbar">
-              <div className={'checkbox' + (selected.size > 0 ? ' checked' : '')} onClick={() => selected.size > 0 ? setSelected(new Set()) : setSelected(new Set(filterFavs.map((p) => p.id)))}>
-                {selected.size > 0 && <Icon name="plus" size={18} sw={3} stroke="#03171f" />}
-              </div>
-              <span className="l">已选 <span className="num">{selected.size}</span> 件</span>
-              <span style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
-                <button className="spec-opt" style={{ height: 64, fontSize: 22 }}>
-                  <Icon name="back" size={20} sw={1.5} /> 移除收藏
-                </button>
-                <button className="btn-big primary" style={{ height: 64, fontSize: 22, padding: '0 32px', background: 'linear-gradient(135deg,#06b6d4,#2563eb)', boxShadow: '0 8px 20px rgba(6,182,212,0.30)' }} onClick={() => onNav('mall-cart')}>
-                  <Icon name="bag" size={22} sw={2} />
-                  <span style={{ marginLeft: 8 }}>加入购物车</span>
-                </button>
-              </span>
+            <div className="prod-grid" style={{ '--cols': 4 }}>
+              {filterFavs.map((p) => <ProductCard key={p.id} p={p} onNav={onNav} />)}
             </div>
           </div>
         )}
@@ -161,22 +121,8 @@ function MallFavorites({ onNav }) {
                 <div className="hist-daytitle">
                   {g.day} <span className="when">{g.when} · {g.products.length} 件</span>
                 </div>
-                <div className="fav-grid" style={{ '--cols': 6 }}>
-                  {g.products.map((p) => (
-                    <div key={p.id} className="fav-card" onClick={() => onNav('mall-detail')}>
-                      <div className="fav-img" style={{ backgroundImage: `url(${p.img})` }} />
-                      <div className="fav-info">
-                        <div className="fav-title">{p.title}</div>
-                        <div className="fav-meta">{p.viewedAt} 浏览</div>
-                        <div className="fav-bottom">
-                          <div className="fav-price">
-                            <span className="cur"><span className="sym">¥</span>{p.price.toFixed(p.price % 1 ? 1 : 0)}</span>
-                          </div>
-                          <span style={{ color: 'var(--color-mint)', fontSize: 18, cursor: 'pointer' }}>再看 →</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="prod-grid" style={{ '--cols': 5 }}>
+                  {g.products.map((p) => <ProductCard key={p.id} p={p} onNav={onNav} />)}
                 </div>
               </div>
             ))}
