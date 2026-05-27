@@ -113,7 +113,7 @@
 /* ─── Points mall ─── */
 .points-hero {
   display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px;
-  align-items: stretch;
+  align-items: start;
 }
 .points-card {
   position: relative; overflow: hidden;
