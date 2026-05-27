@@ -50,6 +50,13 @@ html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, di
     url("../assets/ivi-wallpaper-dark.png") center / cover no-repeat,
     #02040a;
   pointer-events: none;
+  transition: opacity 0.35s ease, filter 0.35s ease;
+}
+/* In mall mode, dim the IVI wallpaper so shop content takes focus.
+   The wallpaper-perceived "blur" the user reported was actually the
+   ambient car photo + dark gradient showing through behind shop cards. */
+.canvas[data-area="mall"]::before {
+  opacity: 0.18;
 }
 .canvas::after {
   content: ""; position: absolute; inset: 0; z-index: 0;

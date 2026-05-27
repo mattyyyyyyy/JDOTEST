@@ -37,23 +37,12 @@ function App() {
   const validInitial = ROUTES.find((r) => r.id === APP_DEFAULTS.initialScreen)?.id || 'ivi';
   const [route, setRoute] = useStateApp(validInitial);
 
-  const prevRouteRef = useRef(route);
   const [enteringMall, setEnteringMall] = useStateApp(false);
-  React.useEffect(() => {
-    const prev = prevRouteRef.current;
-    const isMallRoute = route.startsWith('mall');
-    if (prev === 'ivi' && isMallRoute) {
-      setEnteringMall(true);
-    }
-    if (enteringMall && !isMallRoute) {
-      setEnteringMall(false);
-    }
-    prevRouteRef.current = route;
-  }, [route]);
 
+  // Reset entering flag after animation finishes (550ms = 500ms anim + small buffer)
   React.useEffect(() => {
     if (enteringMall) {
-      const t = setTimeout(() => setEnteringMall(false), 600);
+      const t = setTimeout(() => setEnteringMall(false), 550);
       return () => clearTimeout(t);
     }
   }, [enteringMall]);
@@ -64,7 +53,21 @@ function App() {
     document.documentElement.setAttribute('data-theme', t.theme);
   }, [t.theme]);
 
-  const onNav = (next) => setRoute(next);
+  // Set entering flag synchronously *before* the route change paints — so the
+  // canvas already has data-entering="mall" on the very first frame of the new
+  // mall content. Otherwise mall renders normal for 1 frame, then the CSS
+  // animation kicks in by jumping back to translateY(40%) — visually a
+  // "exit-then-enter" stutter, then on subsequent navs a "slide-down vanish".
+  const onNav = (next) => {
+    const isMallNow = route.startsWith('mall');
+    const isMallNext = next.startsWith('mall');
+    if (!isMallNow && isMallNext) {
+      setEnteringMall(true);   // batched with setRoute below in React 18+
+    } else if (isMallNow && !isMallNext) {
+      setEnteringMall(false);
+    }
+    setRoute(next);
+  };
 
   const cur = ROUTES.find((r) => r.id === route)?.label || '01 IVI Home';
 
