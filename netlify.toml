@@ -1,0 +1,7 @@
+[build]
+  publish = "mockups/jdo-pencil-v3/"
+
+[[redirects]]
+  from = "/"
+  to = "/JDO%20%E8%BD%A6%E6%9C%BA%E7%94%B5%E5%95%86.html"
+  status = 200
