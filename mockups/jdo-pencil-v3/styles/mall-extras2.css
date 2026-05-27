@@ -112,14 +112,15 @@
 
 /* ─── Points mall ─── */
 .points-hero {
-  display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px;
-  align-items: start;
+  display: flex; gap: 16px;
+  align-items: stretch;
 }
 .points-card {
+  flex: 1.25 1 0;
   position: relative; overflow: hidden;
   padding: 18px 22px;
   background: linear-gradient(135deg, #d6bc8a 0%, #a07d3c 100%);
-  border-radius: 20px;
+  border-radius: 18px;
   color: #2a1d05;
   box-shadow: 0 10px 26px rgba(160, 125, 60, 0.25);
 }
@@ -150,19 +151,23 @@
   font-size: 18px; font-weight: 500;
 }
 
-.points-side { display: flex; flex-direction: column; gap: 14px; justify-content: space-between; }
+.points-side {
+  flex: 2 1 0;
+  display: flex; flex-direction: row; gap: 12px;
+}
 .points-side-card {
-  flex: 1;
-  padding: 22px 26px;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 16px 18px;
   background: rgba(20, 22, 26, 0.55);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 22px;
-  display: flex; flex-direction: column; justify-content: center; gap: 8px;
+  border-radius: 16px;
+  display: flex; flex-direction: column; justify-content: center; gap: 6px;
 }
 .canvas[data-theme="light"] .points-side-card { background: rgba(255,255,255,0.92); border-color: rgba(15,23,42,0.06); }
 .points-side-card .l { color: var(--color-text-secondary); font-size: 18px; }
-.points-side-card .v { font-family: var(--font-mono); font-size: 36px; font-weight: 500; }
-.points-side-card .v .delta { font-size: 18px; color: var(--color-mint); font-family: var(--font-sans); margin-left: 8px; font-weight: 300; }
+.points-side-card .v { font-family: var(--font-mono); font-size: 28px; font-weight: 500; }
+.points-side-card .v .delta { font-size: 18px; color: var(--color-mint); font-family: var(--font-sans); margin-left: 6px; font-weight: 300; }
 
 .points-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
 
