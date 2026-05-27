@@ -63,7 +63,7 @@ function StatusBar({ time = '09:20' }) {
   return (
     <div className="statusbar">
       <div className="sb-left">
-        <div className="sb-avatar">J</div>
+        <div className="sb-avatar"><img src="assets/jidoulogo.png" alt="JDO" /></div>
         <div className="sb-brand">JDO</div>
         <div className="sb-pill"><Icon name="battery" size={22} /> 560 km</div>
         <div className="sb-gear">D</div>
