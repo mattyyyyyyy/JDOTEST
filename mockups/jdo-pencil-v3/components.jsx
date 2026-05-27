@@ -114,21 +114,29 @@ function Dock({ route, onNav }) {
           <button title="升温"><Icon name="chevR" /></button>
         </div>
         <div className="dock-apps">
-          {apps.map(a => (
-            <button
-              key={a.id}
-              className={'dock-app' + (
-                (a.id === 'shop' && route !== 'ivi') ? ' active' : ''
-              )}
-              style={{ background: a.g, color: '#fff' }}
-              title={a.label}
-              onClick={() => a.id === 'shop' && onNav && onNav('mall-home')}
-            >
-              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.02em' }}>
-                {a.glyph}
-              </span>
-            </button>
-          ))}
+          {apps.map(a => {
+            const isInMall = route && route.startsWith('mall');
+            const handleClick = () => {
+              if (!onNav) return;
+              if (a.id === 'shop') {
+                // Toggle: in mall → 收回到 ivi; otherwise → open mall-home
+                onNav(isInMall ? 'ivi' : 'mall-home');
+              }
+            };
+            return (
+              <button
+                key={a.id}
+                className={'dock-app' + (a.id === 'shop' && isInMall ? ' active' : '')}
+                style={{ background: a.g, color: '#fff' }}
+                title={a.id === 'shop' && isInMall ? a.label + '（点击收回）' : a.label}
+                onClick={handleClick}
+              >
+                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.02em' }}>
+                  {a.glyph}
+                </span>
+              </button>
+            );
+          })}
         </div>
         <div className="dock-temp">
           <button title="降温"><Icon name="chevL" /></button>
