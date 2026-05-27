@@ -282,7 +282,7 @@ function MallHome({ onNav, cols }) {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
       </div>
 
       <Dock route="mall-home" onNav={onNav} />

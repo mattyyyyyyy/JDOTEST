@@ -147,7 +147,6 @@ function MallSearch({ onNav }) {
               </div>
             </div>
             </div>
-            </div>
             )}
 
           {/* Right: hot ranking */}
