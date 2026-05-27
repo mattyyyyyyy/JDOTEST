@@ -427,15 +427,11 @@ html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, di
   overflow: hidden;
 }
 
-/* ─── Mall blur overlay ─── */
-.canvas[data-area="mall"] .app-stage::before {
-  content: "";
-  position: absolute; inset: 0;
+/* ─── Mall blur overlay (directly on app-stage for reliable backdrop-filter) ─── */
+.canvas[data-area="mall"] .app-stage {
   background: rgba(14, 18, 30, 0.65);
   backdrop-filter: blur(30px) saturate(150%);
   -webkit-backdrop-filter: blur(30px) saturate(150%);
-  z-index: -1;
-  pointer-events: none;
 }
 
 /* ─── Slide-up animation (keyframe-based, works with conditional rendering) ─── */
