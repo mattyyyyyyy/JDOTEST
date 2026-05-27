@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": null,
+  "outputDirectory": "mockups/jdo-pencil-v3",
+  "framework": null,
+  "trailingSlash": false,
+  "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/JDO%20%E8%BD%A6%E6%9C%BA%E7%94%B5%E5%95%86.html",
+      "permanent": false
+    }
+  ]
+}
