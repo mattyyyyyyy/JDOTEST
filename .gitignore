@@ -27,3 +27,4 @@ desktop.ini
 # 本机临时产物（截图缓存 / 解压缓存）
 .tmp-*/
 .tmp-*
+.vercel
