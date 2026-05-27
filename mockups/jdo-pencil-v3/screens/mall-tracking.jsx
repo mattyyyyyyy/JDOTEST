@@ -155,7 +155,7 @@ function MallTracking({ onNav }) {
                   <div className="order-thumb" style={{ width: 60, height: 60, backgroundImage: `url(${p.img})` }} />
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: 20, fontWeight: 300, lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.title}</div>
-                    <div style={{ color: 'var(--color-text-muted)', fontSize: 16 }}>规格 · 默认 · × {Math.floor(Math.random() * 2) + 1}</div>
+                    <div style={{ color: 'var(--color-text-muted)', fontSize: 16 }}>规格 · 默认 · × 1</div>
                   </div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 20, fontWeight: 500 }}>¥ {p.price.toFixed(p.price % 1 ? 1 : 0)}</div>
                 </div>

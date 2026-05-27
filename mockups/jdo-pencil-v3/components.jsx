@@ -32,6 +32,7 @@ const Icon = ({ name, size = 24, stroke = 'currentColor', fill = 'none', sw = 2 
     next:      <><path d="M5 4l10 8L5 20V4Z" fill="currentColor" stroke="none" /><rect x="17" y="4" width="2" height="16" fill="currentColor" stroke="none" /></>,
     plus:      <><path d="M12 5v14M5 12h14" /></>,
     cart:      <><path d="M2 4h2l3 12h12l2-8H6" /><circle cx="9" cy="20" r="1.5" /><circle cx="18" cy="20" r="1.5" /></>,
+    bag:       <><path d="M5 8h14l1 14H4L5 8Z" /><path d="M8 8V6a4 4 0 0 1 8 0v2" /></>,
     star:      <><path d="m12 3 2.9 5.9 6.5.9-4.7 4.6 1.1 6.4L12 17.8 6.2 20.8l1.1-6.4L2.6 9.8l6.5-.9L12 3Z" fill="currentColor" stroke="none" /></>,
     user:      <><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></>,
     settings:  <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" /></>,
@@ -86,7 +87,7 @@ function StatusBar({ time = '09:20' }) {
 // ─── Dock (bottom system bar) ────────────────────────────────────────────
 function Dock({ route, onNav }) {
   const apps = [
-    { id: 'shop',  label: '商城', g: 'linear-gradient(135deg, #ff5b3a, #b91c1c)',          glyph: 'JD' },
+    { id: 'shop',  label: '商城', g: 'linear-gradient(135deg, #06b6d4, #2563eb)',          glyph: '🛒' },
     { id: 'map',   label: '导航', g: 'linear-gradient(135deg, #3b82f6, #1e3a8a)',          glyph: '⌖'  },
     { id: 'music', label: '音乐', g: 'linear-gradient(135deg, #f97316, #b45309)',          glyph: '♬'  },
     { id: 'apps',  label: '应用', g: 'linear-gradient(135deg, #06b6d4, #1e3a8a)',          glyph: '▦'  },
@@ -162,7 +163,7 @@ function ProductCard({ p, onNav }) {
         <div className="prod-title">{p.title}</div>
         <div className="prod-price">
           <span className="cur"><span className="sym">¥</span>{p.price.toFixed(p.price % 1 ? 1 : 0)}</span>
-          {p.ori && <span className="ori">¥{p.ori}</span>}
+          {p.ori > 0 && <span className="ori">¥{p.ori}</span>}
         </div>
         <div className="prod-meta">
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#f59e0b' }}>

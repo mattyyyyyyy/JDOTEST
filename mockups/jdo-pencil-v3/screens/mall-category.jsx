@@ -51,7 +51,7 @@ function MallCategory({ onNav, cols, initialCat = 'energy' }) {
           </div>
           <div className="mall-actions">
             <button className="mall-iconbtn" title="购物车">
-              <Icon name="cart" size={28} />
+              <Icon name="bag" size={28} />
               <span className="badge">3</span>
             </button>
             <button className="mall-iconbtn" title="我的">

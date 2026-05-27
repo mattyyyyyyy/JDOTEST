@@ -101,7 +101,7 @@ function MallReviews({ onNav }) {
               <Icon name="settings" size={20} sw={1.5} /> 我要评价
             </button>
             <button className="mall-iconbtn" title="购物车" onClick={() => onNav('mall-cart')}>
-              <Icon name="cart" size={28} />
+              <Icon name="bag" size={28} />
               <span className="badge">3</span>
             </button>
           </div>

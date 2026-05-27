@@ -188,7 +188,6 @@ function MallOrders({ onNav }) {
             {/* actions */}
             <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
               <button className="spec-opt" style={{ flex: 1, justifyContent: 'center', height: 64 }}>联系客服</button>
-              {cur.status === 'pickup' && <button className="btn-big primary" style={{ flex: 1, height: 64, fontSize: 22 }} onClick={() => onNav('mall-orders')}>查看取货码</button>}
               {cur.status === 'shipping' && <button className="btn-big outline" style={{ flex: 1, height: 64, fontSize: 22 }} onClick={() => onNav('mall-tracking')}>查看物流</button>}
               {cur.status === 'paid' && <button className="btn-big outline" style={{ flex: 1, height: 64, fontSize: 22 }}>催发货</button>}
               {cur.status === 'done' && <>

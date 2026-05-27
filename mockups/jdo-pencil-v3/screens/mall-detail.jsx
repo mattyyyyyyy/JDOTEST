@@ -50,9 +50,10 @@ function MallDetail({ onNav, productId = 'g1' }) {
             <span className="subbar-tab">购买须知</span>
           </div>
           <div className="mall-actions">
+            <button className="mall-iconbtn" title="搜索" onClick={() => onNav('mall-search')}><Icon name="search" size={28} /></button>
             <button className="mall-iconbtn" title="收藏"><Icon name="star" size={28} /></button>
             <button className="mall-iconbtn" title="购物车" onClick={() => onNav('mall-cart')}>
-              <Icon name="cart" size={28} />
+              <Icon name="bag" size={28} />
               <span className="badge">3</span>
             </button>
           </div>
@@ -87,8 +88,10 @@ function MallDetail({ onNav, productId = 'g1' }) {
 
             <div className="detail-pricebar">
               <span className="cur"><span className="sym">¥</span>{p.price.toFixed(p.price % 1 ? 1 : 0)}</span>
-              {p.ori && <span className="ori">¥{p.ori}</span>}
-              <span className="deal">直降 {Math.round((1 - p.price / p.ori) * 100)}%</span>
+              {p.ori > 0 && <>
+                <span className="ori">¥{p.ori}</span>
+                <span className="deal">直降 {Math.round((1 - p.price / p.ori) * 100)}%</span>
+              </>}
               <span className="timer">
                 距结束
                 <span className="seg">00</span>:
@@ -159,7 +162,7 @@ function MallDetail({ onNav, productId = 'g1' }) {
             <div className="detail-cta">
               <button className="btn-big outline" onClick={() => onNav('mall-cart')}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                  <Icon name="cart" size={22} /> 加入购物车
+                  <Icon name="bag" size={22} /> 加入购物车
                 </span>
               </button>
               <button className="btn-big primary" onClick={() => onNav('mall-checkout')}>立即购买</button>

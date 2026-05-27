@@ -1,6 +1,6 @@
 /* global React, StatusBar, Dock, Icon, ProductCard */
 
-const { useState: useStateMH, useEffect: useEffectMH } = React;
+const { useState: useStateMH, useEffect: useEffectMH, useRef: useRefMH } = React;
 
 function MallTopBar({ activeTab, onTab, route, onNav }) {
   return (
@@ -12,11 +12,11 @@ function MallTopBar({ activeTab, onTab, route, onNav }) {
       </div>
       <div className="mall-tabs">
         <span className={'mall-tab' + (activeTab === 'mall' ? ' active' : '')} onClick={() => onTab('mall')}>商城</span>
-        <span className={'mall-tab' + (activeTab === 'mine' ? ' active' : '')} onClick={() => onNav('mall-profile')}>我的</span>
+        <span className={'mall-tab' + (activeTab === 'mine' ? ' active' : '')} onClick={() => onTab('mine')}>我的</span>
       </div>
       <div className="mall-actions">
         <button className="mall-iconbtn" title="购物车" onClick={() => onNav && onNav('mall-cart')}>
-          <Icon name="cart" size={28} />
+          <Icon name="bag" size={28} />
           <span className="badge">3</span>
         </button>
       </div>
@@ -76,8 +76,24 @@ function SlideSlot({ slides, interval, render, dotsAlign = 'left' }) {
 function MallHome({ onNav, cols }) {
   const [activeTab, setActiveTab] = useStateMH('mall');
   const [activeCat, setActiveCat] = useStateMH('energy');
+  const [heroCollapsed, setHeroCollapsed] = useStateMH(false);
+  const scrollRef = useRefMH(null);
   const products = window.JDO_DATA.products;
   const heroRecs = window.JDO_DATA.heroRecs;
+
+  useEffectMH(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    let lastY = 0;
+    const onScroll = () => {
+      const y = el.scrollTop;
+      if (y > lastY + 8 && y > 40) setHeroCollapsed(true);
+      else if (y < lastY - 8) setHeroCollapsed(false);
+      lastY = y;
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
   const feed = products.filter((p) => p.cat === activeCat);
 
@@ -192,7 +208,7 @@ function MallHome({ onNav, cols }) {
         <MallTopBar activeTab={activeTab} onTab={setActiveTab} route="mall-home" onNav={onNav} />
 
         {/* Hero row — full width, sits below topbar */}
-        <div className="mall-hero-section">
+        {activeTab === 'mall' && <div className={'mall-hero-section' + (heroCollapsed ? ' collapsed' : '')}>
           <div className="hero-row">
             <div className="hero-big">
               <SlideSlot slides={officialSlides} interval={6000} render={renderMarketing} dotsAlign="left" />
@@ -206,9 +222,51 @@ function MallHome({ onNav, cols }) {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
 
-        <div className="mall-body">
+        {activeTab === 'mine' && (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 20, padding: '24px 36px', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+              <div className="profile-avatar" style={{ width: 80, height: 80, fontSize: 32 }}>李</div>
+              <div>
+                <div style={{ fontSize: 28, fontWeight: 500 }}>李先生</div>
+                <div style={{ fontSize: 18, color: 'var(--color-text-muted)' }}>黄金车主 · Lv.4 · 8 248 积分</div>
+              </div>
+              <span style={{ marginLeft: 'auto' }} />
+              <button className="spec-opt" style={{ height: 56, fontSize: 20 }} onClick={() => onNav('mall-profile')}>查看全部 <Icon name="chevR" size={18} /></button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
+              {[
+                { icon: 'package', label: '待发货', badge: 1, nav: 'mall-orders' },
+                { icon: 'package', label: '待收货', badge: 2, nav: 'mall-orders' },
+                { icon: 'star', label: '待评价', nav: 'mall-orders' },
+                { icon: 'back', label: '售后', nav: 'mall-aftersale' },
+                { icon: 'star', label: '收藏', nav: 'mall-favorites' },
+              ].map((t) => (
+                <div key={t.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '16px 0', cursor: 'pointer', position: 'relative' }} onClick={() => onNav(t.nav)}>
+                  {t.badge > 0 && <span className="badge" style={{ position: 'absolute', top: 4, right: '30%' }}>{t.badge}</span>}
+                  <Icon name={t.icon} size={32} sw={1.5} style={{ color: 'var(--color-mint)' }} />
+                  <span style={{ fontSize: 20, fontWeight: 300 }}>{t.label}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
+              {[
+                { icon: 'star', label: '我的收藏', v: '32 件', nav: 'mall-favorites' },
+                { icon: 'bolt', label: '优惠券', v: '6 张', nav: 'mall-coupons' },
+                { icon: 'sparkles', label: '积分商城', v: '8 248', nav: 'mall-points' },
+                { icon: 'package', label: '车主钱包', v: '¥ 234', nav: 'mall-wallet' },
+              ].map((s) => (
+                <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '18px 16px', borderRadius: 18, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }} onClick={() => onNav(s.nav)}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--color-mint)' }}><Icon name={s.icon} size={24} sw={1.5} /><span style={{ fontSize: 20 }}>{s.label}</span></div>
+                  <span style={{ fontSize: 18, color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>{s.v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'mall' && <div className="mall-body">
           <MallRail active={activeCat} onChange={setActiveCat} />
           <div className="mall-content">
 
@@ -218,7 +276,7 @@ function MallHome({ onNav, cols }) {
               <span className="sub">基于车主常买 · 已为您过滤大件</span>
             </div>
 
-            <div className="prod-scroll">
+            <div className="prod-scroll" ref={scrollRef}>
               <div className="prod-grid" style={{ '--cols': cols }}>
                 {feed.map((p) => <ProductCard key={p.id} p={p} onNav={onNav} />)}
               </div>

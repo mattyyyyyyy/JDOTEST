@@ -1,6 +1,6 @@
 /* global React, ReactDOM, IVIHome, MallHome, MallCategory, MallDetail, MallCart, MallCheckout, MallPay, MallOrders, MallProfile, MallLogin, MallDriving, MallSearch, MallAddresses, MallCoupons, MallReviews, MallPoints, MallAftersale, MallTracking, MallFavorites, MallWallet, MallSettings, useTweaks, TweaksPanel, TweakSection, TweakRadio, TweakSelect */
 
-const { useState: useStateApp, useEffect: useEffectApp } = React;
+const { useState: useStateApp, useEffect: useEffectApp, useRef } = React;
 
 const APP_DEFAULTS = /*EDITMODE-BEGIN*/{
   "theme": "dark",
@@ -37,6 +37,27 @@ function App() {
   const validInitial = ROUTES.find((r) => r.id === APP_DEFAULTS.initialScreen)?.id || 'ivi';
   const [route, setRoute] = useStateApp(validInitial);
 
+  const prevRouteRef = useRef(route);
+  const [enteringMall, setEnteringMall] = useStateApp(false);
+  React.useEffect(() => {
+    const prev = prevRouteRef.current;
+    const isMallRoute = route.startsWith('mall');
+    if (prev === 'ivi' && isMallRoute) {
+      setEnteringMall(true);
+    }
+    if (enteringMall && !isMallRoute) {
+      setEnteringMall(false);
+    }
+    prevRouteRef.current = route;
+  }, [route]);
+
+  React.useEffect(() => {
+    if (enteringMall) {
+      const t = setTimeout(() => setEnteringMall(false), 600);
+      return () => clearTimeout(t);
+    }
+  }, [enteringMall]);
+
   useEffectApp(() => {
     const canvas = document.querySelector('.canvas');
     if (canvas) canvas.setAttribute('data-theme', t.theme);
@@ -53,6 +74,8 @@ function App() {
       data-theme={t.theme}
       data-mode={route === 'mall-driving' ? 'driving' : 'parked'}
       data-screen-label={cur.replace(' · ', ' ')}
+      data-area={route === 'ivi' ? 'home' : 'mall'}
+      data-entering={enteringMall ? 'mall' : undefined}
     >
       {route === 'ivi'            && <IVIHome onNav={onNav} />}
       {route === 'mall-home'      && <MallHome onNav={onNav} cols={t.cols} />}

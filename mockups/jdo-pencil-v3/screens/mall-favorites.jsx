@@ -1,12 +1,19 @@
 /* global React, StatusBar, Dock, Icon */
 
-const { useState: useStateFv } = React;
+const { useState: useStateFv, useMemo: useMemoFv, useEffect: useEffectFv } = React;
 
 function MallFavorites({ onNav }) {
   const products = window.JDO_DATA.products;
   const [tab, setTab] = useStateFv('fav');
   const [selected, setSelected] = useStateFv(new Set());
   const [cat, setCat] = useStateFv('all');
+
+  useEffectFv(() => {
+    if (window.__JDO_FAV_TAB) {
+      setTab(window.__JDO_FAV_TAB);
+      delete window.__JDO_FAV_TAB;
+    }
+  }, []);
 
   const cats = [
     { id: 'all',    name: '全部' },
@@ -19,13 +26,12 @@ function MallFavorites({ onNav }) {
     { id: 'select', name: '严选' },
   ];
 
-  // Curate "favorites" — 12 products with random drop/oos flags
-  const favs = products.slice(0, 14).map((p, i) => ({
+  const favs = useMemoFv(() => products.slice(0, 14).map((p, i) => ({
     ...p,
     drop: i % 4 === 0 ? Math.floor(Math.random() * 40 + 10) : 0,
     oos: i === 7,
     favAt: ['今天 09:20', '今天 08:42', '昨天 18:05', '昨天 12:18', '5/24 21:08', '5/23 14:30', '5/22 10:55', '5/22 09:18', '5/20 16:48', '5/19 22:12', '5/18 15:30', '5/16 11:45', '5/14 09:08', '5/12 18:22'][i],
-  }));
+  })), []);
 
   const filterFavs = cat === 'all' ? favs : favs.filter((p) => p.cat === cat);
 
@@ -134,7 +140,7 @@ function MallFavorites({ onNav }) {
                   <Icon name="back" size={20} sw={1.5} /> 移除收藏
                 </button>
                 <button className="btn-big primary" style={{ height: 64, fontSize: 22, padding: '0 32px', background: 'linear-gradient(135deg,#06b6d4,#2563eb)', boxShadow: '0 8px 20px rgba(6,182,212,0.30)' }} onClick={() => onNav('mall-cart')}>
-                  <Icon name="cart" size={22} sw={2} />
+                  <Icon name="bag" size={22} sw={2} />
                   <span style={{ marginLeft: 8 }}>加入购物车</span>
                 </button>
               </span>

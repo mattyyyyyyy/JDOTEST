@@ -1,10 +1,12 @@
-/* global React, StatusBar, Dock, Icon */
+/* global React, StatusBar, Dock, Icon, ProductCard */
 
-const { useState: useStateSr } = React;
+const { useState: useStateSr, useEffect: useEffectSr } = React;
 
 function MallSearch({ onNav }) {
   const products = window.JDO_DATA.products;
-  const [q, setQ] = useStateSr('玻璃水');
+  const [q, setQ] = useStateSr('');
+  const [searched, setSearched] = useStateSr('');
+  const inputRef = React.useRef(null);
 
   const hots = [
     { n: '玻璃水',          tag: '车主必备', kind: 'mint',  cnt: '12.8w' },
@@ -21,10 +23,17 @@ function MallSearch({ onNav }) {
 
   const history = ['玻璃水 6 瓶', '充电桩 速锐', '车载香薰', 'JBL 蓝牙音箱', '冬季睡袋', '后视镜防眩光', '茶杯架'];
 
-  // Suggestions match q
-  const sugg = products
-    .filter((p) => p.title.includes(q.replace(/水|的|车|载/g, '')) || p.cat === 'car')
-    .slice(0, 6);
+  // Suggestions match q (live, before search)
+  const sugg = q.length > 0
+    ? products.filter((p) => p.title.includes(q.replace(/水|的|车|载/g, ''))).slice(0, 6)
+    : [];
+
+  // Search results (after clicking search)
+  const results = searched.length > 0
+    ? products.filter((p) => p.title.includes(searched) || (p.cat && p.cat.includes(searched)))
+    : [];
+
+  const doSearch = () => { if (q.trim()) setSearched(q.trim()); };
 
   return (
     <>
@@ -46,7 +55,7 @@ function MallSearch({ onNav }) {
           <div className="mall-actions">
             <button className="mall-iconbtn" title="客服"><Icon name="phone" size={28} /></button>
             <button className="mall-iconbtn" title="购物车" onClick={() => onNav('mall-cart')}>
-              <Icon name="cart" size={28} />
+              <Icon name="bag" size={28} />
               <span className="badge">3</span>
             </button>
           </div>
@@ -55,19 +64,43 @@ function MallSearch({ onNav }) {
         <div style={{ padding: '20px 36px 0' }}>
           <div className="search-input-wrap">
             <input
+              ref={inputRef}
               className="search-input-big"
               value={q}
               onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && doSearch()}
               placeholder="搜索车品 · 数码 · 食品 · 生活"
             />
             <button className="search-input-mic" title="语音搜索">
               <Icon name="mic" size={28} sw={2} />
             </button>
+            <button className="search-go-btn" onClick={doSearch}>
+              <Icon name="search" size={28} sw={2} stroke="#03171f" />
+            </button>
           </div>
         </div>
 
         <div className="search-body" style={{ paddingTop: 16 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, overflowY: 'auto', paddingRight: 6 }}>
+          {searched ? (
+            /* ── Search results ── */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto', padding: '0 12px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+                <h3 style={{ fontSize: 28, fontWeight: 500 }}>搜索结果</h3>
+                <span style={{ color: 'var(--color-text-muted)', fontSize: 20 }}>「{searched}」· {results.length} 件商品</span>
+                <span style={{ marginLeft: 'auto', color: 'var(--color-mint)', fontSize: 20, cursor: 'pointer' }} onClick={() => { setSearched(''); setQ(''); }}>重新搜索</span>
+              </div>
+              <div className="prod-grid" style={{ '--cols': 4 }}>
+                {results.map((p) => <ProductCard key={p.id} p={p} onNav={onNav} />)}
+              </div>
+              {results.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--color-text-muted)', fontSize: 24 }}>
+                  没有找到「{searched}」相关商品
+                </div>
+              )}
+            </div>
+          ) : (
+            /* ── Default: suggestions + hot ── */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24, overflowY: 'auto', paddingRight: 6 }}>
             {/* Voice tip */}
             <div className="voice-tip">
               <div className="orb" />
@@ -85,7 +118,8 @@ function MallSearch({ onNav }) {
               </h4>
               <div className="sugg-list">
                 {sugg.map((p, i) => {
-                  const matched = p.title.replace(new RegExp(`(${q})`, 'g'), '<b>$1</b>');
+                  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                  const matched = p.title.replace(new RegExp(`(${escaped})`, 'g'), '<b>$1</b>');
                   return (
                     <div key={p.id} className={'sugg-row' + (i === 0 ? ' match' : '')} onClick={() => onNav('mall-detail')}>
                       <div className="ico"><Icon name="search" size={22} sw={1.5} /></div>
@@ -112,7 +146,9 @@ function MallSearch({ onNav }) {
                 ))}
               </div>
             </div>
-          </div>
+            </div>
+            </div>
+            )}
 
           {/* Right: hot ranking */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18, overflowY: 'auto' }}>

@@ -1,8 +1,14 @@
 /* global React, StatusBar, Icon */
 
+const { useMemo: useMemoDr } = React;
+
 function MallDriving({ onNav }) {
   const products = window.JDO_DATA.products;
   const repeats = ['e4', 'g1', 'f5', 'x3'].map((id) => products.find((p) => p.id === id));
+  const repeatMeta = useMemoDr(() => repeats.map(() => ({
+    daysAgo: Math.floor(Math.random() * 30) + 1,
+    times: Math.floor(Math.random() * 5) + 2,
+  })), []);
 
   return (
     <>
@@ -44,13 +50,13 @@ function MallDriving({ onNav }) {
               <span style={{ color: 'var(--color-text-muted)', fontSize: 20 }}>基于你过去 30 天的复购规律</span>
             </div>
             <div className="repeat-grid" style={{ flex: 1, minHeight: 0 }}>
-              {repeats.map((p) => (
+              {repeats.map((p, i) => (
                 <div key={p.id} className="repeat-card">
                   <div className="repeat-img" style={{ backgroundImage: `url(${p.img})` }} />
                   <div className="repeat-info">
                     <div>
                       <div className="repeat-name">{p.title}</div>
-                      <div className="repeat-meta">上次 {Math.floor(Math.random() * 30) + 1} 天前 · 累计已买 {Math.floor(Math.random() * 5) + 2} 次</div>
+                      <div className="repeat-meta">上次 {repeatMeta[i].daysAgo} 天前 · 累计已买 {repeatMeta[i].times} 次</div>
                     </div>
                     <div className="repeat-price">
                       <span className="cur"><span className="sym">¥</span>{p.price.toFixed(p.price % 1 ? 1 : 0)}</span>

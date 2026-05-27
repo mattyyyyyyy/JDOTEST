@@ -11,7 +11,7 @@ function MallProfile({ onNav }) {
 
   const services = [
     { id: 'fav',     label: '我的收藏',   icon: 'star',      v: '32 件',         nav: 'mall-favorites' },
-    { id: 'history', label: '浏览记录',   icon: 'search',    v: '108 件',         nav: 'mall-favorites' },
+    { id: 'history', label: '浏览记录',   icon: 'search',    v: '108 件',         nav: 'mall-favorites', favTab: 'hist' },
     { id: 'coupon',  label: '优惠券',     icon: 'bolt',      v: '6 张可用',     nav: 'mall-coupons'  },
     { id: 'points',  label: '积分商城',   icon: 'sparkles',  v: '8 248 分',       nav: 'mall-points'   },
     { id: 'wallet',  label: '车主钱包',   icon: 'package',   v: '¥ 234.50',      nav: 'mall-wallet'   },
@@ -94,7 +94,7 @@ function MallProfile({ onNav }) {
               <h4>常用服务</h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                 {services.map((s) => (
-                  <div key={s.id} style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 14, alignItems: 'center', padding: '14px 16px', borderRadius: 16, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }} onClick={() => s.nav && onNav(s.nav)}>
+                  <div key={s.id} style={{ display: 'grid', gridTemplateColumns: '56px 1fr', gap: 14, alignItems: 'center', padding: '14px 16px', borderRadius: 16, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }} onClick={() => { if (s.favTab) window.__JDO_FAV_TAB = s.favTab; s.nav && onNav(s.nav); }}>
                     <div className="pt-ic" style={{ background: 'rgba(94,234,212,0.10)', color: 'var(--color-mint)' }}><Icon name={s.icon} size={28} sw={1.5} /></div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
                       <div style={{ fontSize: 20, fontWeight: 300 }}>{s.label}</div>

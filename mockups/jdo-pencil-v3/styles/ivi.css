@@ -98,6 +98,12 @@ html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, di
   font-size: 24px; font-weight: 500;
   color: var(--color-text-primary);
   position: relative;
+  transition: background 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
+}
+.canvas[data-area="mall"] .statusbar {
+  background: rgba(8, 12, 21, 0.75);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
 }
 .sb-left, .sb-right { display: flex; align-items: center; gap: 28px; }
 .sb-right { justify-self: end; }
@@ -421,6 +427,29 @@ html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, di
   overflow: hidden;
 }
 
+/* ─── Mall blur overlay ─── */
+.canvas[data-area="mall"] .app-stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: rgba(8, 12, 21, 0.55);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ─── Slide-up animation (transition-based, no flicker) ─── */
+.canvas[data-area="mall"] .app-stage {
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease,
+              filter 0.35s ease;
+}
+.canvas[data-entering="mall"] .app-stage {
+  transform: translateY(50%);
+  opacity: 0;
+  filter: blur(6px);
+}
+
 /* mall top bar */
 .mall-topbar {
   height: 96px; padding: 0 48px;
@@ -449,14 +478,17 @@ html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, span, di
   color: var(--color-text-muted);
   cursor: pointer; padding: 8px 4px;
   position: relative;
+  transition: color 0.25s ease;
 }
-.mall-tab.active { color: var(--color-text-primary); }
-.mall-tab.active::after {
+.mall-tab::after {
   content: ""; position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%);
-  width: 32px; height: 4px; border-radius: 2px;
+  width: 0; height: 4px; border-radius: 2px;
   background: var(--color-mint);
   box-shadow: 0 0 12px var(--color-mint);
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.mall-tab.active { color: var(--color-text-primary); }
+.mall-tab.active::after { width: 32px; }
 .mall-actions { display: flex; align-items: center; gap: 18px; }
 .mall-iconbtn {
   width: 64px; height: 64px; border-radius: 18px;

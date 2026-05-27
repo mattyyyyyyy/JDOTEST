@@ -18,7 +18,7 @@ window.JDO_DATA = (function () {
   // For backward compat — favorites screen filter chips still reference these
   const products = [
     // ───── 能量补给 energy（加油 + 充电 + 玻璃水 + 车充 + 油卡）─────
-    { id: 'e1', cat: 'energy', img: u('photo-1545459720-aac8509eb02c'),    title: '中石化 95# 加油 ¥100 油卡',                       price: 97.0,  ori: 100, tag: '车主直降 3%', tagKind: 'mint',   sold: 24.6, star: 4.9 },
+    { id: 'e1', cat: 'energy', img: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23E60012'/%3E%3Cpath d='M30 65 C30 45 50 35 50 50 C50 35 70 45 70 65 L70 72 C70 55 50 45 50 58 C50 45 30 55 30 72Z' fill='white'/%3E%3C/svg%3E", title: '中石化 95# 加油 ¥100 油卡',                       price: 97.0,  ori: 100, tag: '车主直降 3%', tagKind: 'mint',   sold: 24.6, star: 4.9 },
     { id: 'e2', cat: 'energy', img: u('photo-1593941707882-a5bba14938c7'), title: '特来电充电桩 月度无限卡',                          price: 88.0,  ori: 168, tag: '充电 95 折', tagKind: 'mint',     sold: 5.2,  star: 4.8 },
     { id: 'e3', cat: 'energy', img: u('photo-1648412781131-e5cdbf7a5a02'), title: '国家电网车主月卡 · 全国通用',                       price: 188,   ori: 268, tag: '车厂联名', tagKind: 'cyan',       sold: 1.8,  star: 4.7 },
     { id: 'e4', cat: 'energy', img: u('photo-1607860108855-64acf2078ed9'), title: '玻璃水四季通用 防冻除胶 6 瓶/箱',                  price: 29.9,  ori: 59,  tag: '车主必备', tagKind: 'mint',       sold: 3.4,  star: 4.8 },
